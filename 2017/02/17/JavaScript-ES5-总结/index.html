@@ -12,8 +12,12 @@
 
 
 
+  <meta name="description" content="JavaScript ES5 总结"/>
 
 
+
+
+  <meta name="keywords" content="JavaScript," />
 
 
 
@@ -27,15 +31,34 @@
 
 
 
-<link rel="canonical" href="https://ShiKaiWi.github.io/"/>
+<link rel="canonical" href="https://ShiKaiWi.github.io/2017/02/17/JavaScript-ES5-总结/"/>
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="ShiKaiWi's Homepage">
-<meta property="og:url" content="https://ShiKaiWi.github.io/index.html">
+<meta name="description" content="AbstractJavaScript 的语法让我感到非常不舒服，究其原因其实是因为两点：
+
+动态语言
+原型编程
+
+对于动态语言，我个人始终认为是不符合大型 project 的要求的，因为动态语言的特性导致阅读代码的时候非常不顺利，比如你看到一个 function 的参数时候，你完全不知道它是怎样的结构，但是像 Java 这样的强类型语言，每一个参数都有类型，就使得对于每一个参数你都知道它实实在在的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript ES5 总结">
+<meta property="og:url" content="https://ShiKaiWi.github.io/2017/02/17/JavaScript-ES5-总结/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
+<meta property="og:description" content="AbstractJavaScript 的语法让我感到非常不舒服，究其原因其实是因为两点：
+
+动态语言
+原型编程
+
+对于动态语言，我个人始终认为是不符合大型 project 的要求的，因为动态语言的特性导致阅读代码的时候非常不顺利，比如你看到一个 function 的参数时候，你完全不知道它是怎样的结构，但是像 Java 这样的强类型语言，每一个参数都有类型，就使得对于每一个参数你都知道它实实在在的">
+<meta property="og:updated_time" content="2017-03-14T16:32:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ShiKaiWi's Homepage">
+<meta name="twitter:title" content="JavaScript ES5 总结">
+<meta name="twitter:description" content="AbstractJavaScript 的语法让我感到非常不舒服，究其原因其实是因为两点：
+
+动态语言
+原型编程
+
+对于动态语言，我个人始终认为是不符合大型 project 的要求的，因为动态语言的特性导致阅读代码的时候非常不顺利，比如你看到一个 function 的参数时候，你完全不知道它是怎样的结构，但是像 Java 这样的强类型语言，每一个参数都有类型，就使得对于每一个参数你都知道它实实在在的">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.2.x" />
@@ -72,7 +95,7 @@
 
 
 
-    <title> ShiKaiWi's Homepage </title>
+    <title> JavaScript ES5 总结 · ShiKaiWi's Homepage </title>
   </head>
 
   <body>
@@ -152,129 +175,12 @@
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
-    
-      
+  
   <article class="post">
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2017/03/05/Git-实践/">Git-实践</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Mar 5, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h3 id="1-git-merge-时发生了什么-如何处理？"><a href="#1-git-merge-时发生了什么-如何处理？" class="headerlink" title="1. git merge 时发生了什么? 如何处理？"></a>1. git merge 时发生了什么? 如何处理？</h3><p>发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 pull 还是 push 都会出现 conflicts ）。<br>对于这种情况，首先我想强调的是，不必紧张，git 是会保存所有的东西的，你们所有的更改都会保存下来。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">A -----&gt; B1(sb else&apos;s commit) ---&gt; C</div><div class="line">|                                  | </div><div class="line">\                                  /</div><div class="line"> ------&gt; B2(your commit)----------</div></pre></td></tr></table></figure>
-<p>首先，你得了解你的 repo 处在什么状态——实际上是处于一个 merge 状态，这种状态你需要处理所有 unmerged file。<br>然后，你有两个选择，手动消除 unmerged 的地方，然后使用 <code>git add &lt;file&gt;</code> 来表示 merge 完毕，之后就可以提交新的 commit（需要注意的是这时的 commit 是一个 merge 类型的结点，它有两个父节点，这点下面会因此而出现意外情况）。在提交新的 commit 之前，你还可以使用 <code>git merge --abort</code> 来取消这次 merge。</p>
-<p>但是如果出现这样的情况，merge 完毕后发现自己的 merge 做的有问题，不必担心，由上面的图可以知道，之前的冲突结点都保存着，那么该如何恢复呢？<br>很简单，通过 revert 恢复是最安全的方式（注意，revert 和 reset 不一样，reset 是恢复到参数指定的 commit 的状态，而 revert 是回滚指定 commit 的状态到上一次 commit）<br>但是如果你使用 <code>git revert &lt;B2&#39;s SHA&gt;</code> 会出 conflicts，这是因为你理解错了 revert 的含义（通过 git revert –abort 可以回滚）,而出现 conflicts 的原因是一般 revert 只会用作 <code>revert HEAD</code>，因此 git 知道回滚到当前 commit 的上一次 commit的方法，没有其他选择，若是回滚到指定版本的话，git 并不知道如何跨 commit 回滚，因此必须要人来手动 merge 一下。<br>在这里的情况我们得使用 <code>git revert HEAD</code>，但是即使如此，仍然不对，而且是出错，这是因为，回滚 C 的时候，发现 C 有两个父节点，因此必须指定回滚到哪一个结点才行，那么如何知道相应父节点的编号呢？通过 <code>git log</code> 即可查看父节点的顺序，有了顺序使用 <code>git revert HEAD -m &lt;number&gt;</code> 来回滚到指定的父节点（注意编号从 1 开始）。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/02/27/React-Redux-入门坑总结/">React-Redux 入门坑总结</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Feb 27, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>我这个星期基本上在工作之余都在研究 React 和 Redux，我之前对这部分知识完全没用接触过，期间遇到很多坑，尤其是在想自己能够完成一个独立的比较小的 React App 的时候，发现出现了很多意想不到的事情，下面是我这个星期的总结。</p>
-<p>注意，本文不是 React 和 Redux 的 tutorial，按道理讲，官方文档已经写的比较好了，但是对于新手来说可能不是很容易上手，因此，如果你看完了官方文档，在自己动手实现自己的第一个 React App 的时候，如果先看一下本文可能会得到一些启示，从而绕过一些坑。</p>
-<p>文章分为两个部分，第一部分是关于 React 的内容，第二部分是关于 Redux 的内容（需要注意的是，React 和 Redux 不是必须一起使用的，实际上本文写的时候，Redux 已经有式微的趋势了）。</p>
-<p>文中使用的原本 code 来自于 facebook 的 React 项目的 <a href="https://codepen.io/ericnakagawa/pen/vXpjwZ?editors=0010" target="_blank" rel="external">tutorial</a>。</p>
-<h2 id="阅读之前最好先看过……"><a href="#阅读之前最好先看过……" class="headerlink" title="阅读之前最好先看过……"></a>阅读之前最好先看过……</h2><ol>
-<li>React 的 <a href="https://codepen.io/ericnakagawa/pen/vXpjwZ?editors=0010" target="_blank" rel="external">tutorial</a>。</li>
-<li>webpack 的简单介绍</li>
-<li>Redux 的基础部分</li>
-</ol>
-<h2 id="React"><a href="#React" class="headerlink" title="React"></a>React</h2><p>首先对 React 的特点做一个总结，React 是 facebook 推出的一个前端框架（注意前端不一定是指 web），其最大的特点在于，<strong>视图组件化</strong>。</p>
-<p>我两年前（2015）的时候，还没有接触到 React 这种东西，那时候我只知道 Dom 编程，当时就感觉，开发前端页面非常繁琐，尤其是再结合 PHP 使用，其主要问题就是 JS 代码就是脚本，复用性不高，视图的响应逻辑逻辑很混乱，而 React 很好地解决了这个问题，通过将想要构建的视图直接分解成具有层级的组件，这样就可以大大提高视图组件的复用性，此外，每一个组件都具备相应的 props 和 state，前者是组件的属性值，后者是组件的状态，两者的区别就在于：前者是由父组件提供的组件属性（所以在组件内部是只读的），后者是私有的组件属性（用于保存这个组件的状态，从而实现自更新）:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 这是 ReactComponent.js 的一段代码</span></div><div class="line">ReactComponent.prototype.setState = <span class="function"><span class="keyword">function</span> (<span class="params">partialState, callback</span>) </span>&#123;</div><div class="line">  !(<span class="keyword">typeof</span> partialState === <span class="string">'object'</span> || <span class="keyword">typeof</span> partialState === <span class="string">'function'</span> || partialState == <span class="literal">null</span>) ? process.env.NODE_ENV !== <span class="string">'production'</span> ? invariant(<span class="literal">false</span>, <span class="string">'setState(...): takes an object of state variables to update or a function which returns an object of state variables.'</span>) : _prodInvariant(<span class="string">'85'</span>) : <span class="keyword">void</span> <span class="number">0</span>;</div><div class="line">  <span class="keyword">this</span>.updater.enqueueSetState(<span class="keyword">this</span>, partialState);</div><div class="line">  <span class="keyword">if</span> (callback) &#123;</div><div class="line">    <span class="keyword">this</span>.updater.enqueueCallback(<span class="keyword">this</span>, callback, <span class="string">'setState'</span>);</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>其中最重要的一段代码就是   <code>this.updater.enqueueSetState(this, partialState);</code>，可以看出来，当使用了 setState 后，便会将新的状态放入 updater 的更新队列中。</p>
-<h3 id="搭建起一个可以构建-React-App-的本地环境"><a href="#搭建起一个可以构建-React-App-的本地环境" class="headerlink" title="搭建起一个可以构建 React App 的本地环境"></a>搭建起一个可以构建 React App 的本地环境</h3><p>之所以会提到这一点，是因为 facebook 提供的 <a href="https://codepen.io/ericnakagawa/pen/vXpjwZ?editors=0010" target="_blank" rel="external">starter code</a> 是在线的版本，当你把代码复制到本地的时候，根本就用不了。</p>
-<p>这时候必须使用到一个方便的工具了，叫做 <a href="https://webpack.github.io/" target="_blank" rel="external">webpack</a>，这是一个打包 js 代码的工具，通过简单的配置，便可以使用其将所有的 js 代码打包起来，比如叫做 <em>bundle.js</em>，然后直接在 <em>index.html</em> 中引用这个脚本。</p>
-<p>但是，仅仅如此还不够，因为上述代码使用的是 ES6 + JSX 的形式，因此必须还得配置好 webpack 的配置文件 <em>webpack.config.js</em>，在 webpack 这个工具之中有 loader 这个概念，loader 的意思其实就是解析其他形式的语言到 js 的形式，由第三方提供，在这里我们使用 babel 这个 loader，此外必须安装 babel 的另外两个 loader：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm i babel-loader babel-preset-es2015 babel-preset-react -S</div></pre></td></tr></table></figure></p>
-<p>然后要在 <em>webpack.config.js</em> 里配置好：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">entry</span>:<span class="string">'./index.js'</span>,</div><div class="line">    <span class="attr">output</span>:&#123;</div><div class="line">        <span class="attr">filename</span>:<span class="string">"bundle.js"</span>,</div><div class="line">        <span class="attr">path</span>:path.resolve(__dirname,<span class="string">'dist'</span>)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">module</span>:&#123;</div><div class="line">        <span class="attr">loaders</span>:[</div><div class="line">          &#123;</div><div class="line">            <span class="attr">test</span>: <span class="regexp">/(\.jsx|\.js)$/</span>,</div><div class="line">            <span class="attr">loaders</span>: <span class="string">'babel-loader'</span>,</div><div class="line">            <span class="attr">query</span>:&#123;</div><div class="line">                <span class="attr">presets</span>:[<span class="string">'es2015'</span>,<span class="string">'react'</span>,<span class="string">'stage-0'</span>]</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</div><div class="line">            <span class="attr">include</span>: __dirname</div><div class="line">          &#125;,</div><div class="line">          &#123;</div><div class="line">            <span class="attr">test</span>: <span class="regexp">/\.scss$/</span>,</div><div class="line">            <span class="attr">loaders</span>: [<span class="string">'style'</span>, <span class="string">'css'</span>, <span class="string">'sass'</span>],</div><div class="line">            <span class="attr">include</span>: __dirname</div><div class="line">          &#125;,</div><div class="line">          &#123;</div><div class="line">            <span class="attr">test</span>: <span class="regexp">/\.html$/</span>,</div><div class="line">            <span class="attr">loader</span>: <span class="string">'file?name=[name].[ext]'</span></div><div class="line">          &#125;,</div><div class="line">        ],</div><div class="line"></div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h3 id="使用-JSX-的注意点"><a href="#使用-JSX-的注意点" class="headerlink" title="使用 JSX 的注意点"></a>使用 JSX 的注意点</h3><p>JSX 其实就是将 html 的标签引入进了 js 中，但是在使用上也有必须要注意的问题，我是第一次使用 JSX，因此就遇到了一些问题。</p>
-<ol>
-<li>JSX 本质上就是一个 expression，这一点很重要，因此它可以被 return 返回，可以用数组存储</li>
-<li>JSX 的 tag 必须成对出现，这一点和 xml 的语法很像，不可省略（若是省略，首 tag 之后的内容会被认为全在 tag 之内）</li>
-<li>JSX 中虽然可以通过 <code>{var}</code> 这样的方式，来加入上下文的出现的变量，但是在 JSX 的 tag 之间不能出现 expression 以外的 statement，这里之所以会提到这一点是因为想说不要试图通过在 tag 之间加入 for 循环来进行相同类型的 element 的生成（想要达到这一效果，可以使用数组来存储中间的 element，然后最后一起提供给 render 函数</li>
-</ol>
-<h3 id="React-组件的书写"><a href="#React-组件的书写" class="headerlink" title="React 组件的书写"></a>React 组件的书写</h3><p>写 React 组件有两种方法：class 继承 或者 提供一个 function。</p>
-<p>在使用 class 继承的时候，有一点必须要注意，class 是 ES6 的语法，因此必须使用 babel-ex2015 这个 loader 来解析，此外根据 es6 的语法，在 class 内部使用方法的时候，必须通过 <code>this</code> 来引用。</p>
-<p>在使用 function 的时候，一种简洁的方法便是使用 arrow function，但是需要注意的是 arrow function 的时候，提供的参数只有一个，就是用来赋给 props 的，code 里面的例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Board = <span class="function">(<span class="params">&#123;nextPlayer,squares,handleClick&#125;</span>)=&gt;</span>&#123;...&#125;</div></pre></td></tr></table></figure>
-<h3 id="javascript-的自动插入-semicolon-ASI-auto-semicolon-insertion"><a href="#javascript-的自动插入-semicolon-ASI-auto-semicolon-insertion" class="headerlink" title="javascript 的自动插入 semicolon (ASI, auto semicolon insertion)"></a>javascript 的自动插入 semicolon (ASI, auto semicolon insertion)</h3><p>这一点是我这次过程中才发现的，真的让我很无力，关于这一点有很详细的文档记载，可以参考这个 SO <a href="http://stackoverflow.com/questions/2846283/what-are-the-rules-for-javascripts-automatic-semicolon-insertion-asi" target="_blank" rel="external">问答</a>，在这里我只想强调一点，就是关于 return 的 ASI：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">return</span></div><div class="line">&#123;</div><div class="line">    <span class="attr">a</span>:<span class="number">1</span>,</div><div class="line">    <span class="attr">b</span>:<span class="number">2</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// will be transformed to:</span></div><div class="line"><span class="keyword">return</span> ;</div><div class="line">&#123;</div><div class="line">    <span class="attr">a</span>:<span class="number">1</span>,</div><div class="line">    <span class="attr">b</span>:<span class="number">2</span>,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>Redux 的设计思想在我看来还是很先进的，在这里先以我的理解做一下简单的总结。</p>
-<p>虽然说 React 和 Redux 和 React 没有必然联系，但是在我看来，没有类似于 React 的这种<strong>视图组件化</strong>的思想的话，那么 Redux 就是空中楼阁，Redux 的设计理念是对 React 的一大应用，它所做的事情其实就是将<strong>视图的响应逻辑集中化</strong>，React 组件在设计庞大之后，将会出现难以避免的视图响应逻辑复杂（复杂之处在于不同组件之间的交互），这也是为什么 React 的官方文档里总是提倡 <strong>lift up state</strong>，通过这样来避免小组件之间的通信。</p>
-<p>在 Redux 的设计之外，有一个重要的理念，就是 Component 和 Container 的设计思想，这也是 Redux 官方文档推荐的一篇 <a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0" target="_blank" rel="external">post</a>。这和 React 的 <strong>lift up state</strong> 思想很相似，其实在最后所有的状态都集中到的那个 Component 就是这里的 Container，因此 Redux 在与 React 的结合使用中，你会发现，Redux 实际上将 state 从 Component 中抽离了，当然也并非存在于 Container，而是存在于全局，Container 只是访问全局 state 的地方而已，那么 UI 的更新又是如何做的呢？Redux 通过 state 的改变，然后将这种改变映射到 props 中去，然后会导致相应的 Component UI 发生变化。</p>
-<h3 id="Redux-的流程"><a href="#Redux-的流程" class="headerlink" title="Redux 的流程"></a>Redux 的流程</h3><p>官方文档的 tutorial 写的很好了，但是我看完之后，真正轮到我实现的时候又变得懵逼了，究其原因其实在于不理解 Redux 的控制流程。</p>
-<p>因此 Redux 的入门坑就在于如何正确理解它的控制流程，下面是我的理解：<br>state 作为存储于全局的变量，只要在一开始正确设置了 store，那么在这个 App 的内部任何地方都可以访问到 App 的状态（通过 <code>store.getState()</code>）</p>
-<p>reducer 实际上就是做了一件事，描述了整个状态机，(previous state, action) =&gt; (next state)</p>
-<p>在设计的时候，要分别实现相应的 Component 和 Container，其中 Container 中不要涉及 state 的访问，它对 Redux 是一无所知的，而 Container 负责做两件事，分别对应着两个个需要实现的函数：mapStateToProps 和 mapDispatchToProps。</p>
-<p>其实这两个函数的名字可以任意取，但是这样取可以表明他们的含义，从名字可以看出它们都是给 Component 的 props 赋值，但赋值的对象和目的有所区别，前者负责描述 (current state) =&gt; (current props)，也就是在状态改变的时候如何更新 UI；后者做的是将 dispatch 动作赋值给 Component 的 props 中的事件属性，比如 onclick ，一般只会执行一次，用于触发 action，从而依据自定义的 reducer 推动 state 的更新。</p>
-<p>因此，整个触发流程便是含有 dispatch action 的 onClick 被触发了，然后 reducer 指明了下一个 state，然后 mapStateToProps 被调用了，然后 Component 被重新绘制了。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/02/17/JavaScript-ES5-总结/">JavaScript ES5 总结</a>
+          JavaScript ES5 总结
         
       </h1>
 
@@ -287,14 +193,17 @@
 
     
     
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量管理"><span class="toc-text">变量管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ES3"><span class="toc-text">ES3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Execution-Context-EC"><span class="toc-text">Execution Context(EC)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Variable-Object-VO-Activation-Object-AO"><span class="toc-text">Variable Object(VO) / Activation Object(AO)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scope-Chain-SC"><span class="toc-text">Scope Chain(SC)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Reference-Type-RT"><span class="toc-text">Reference Type(RT)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#属性访问"><span class="toc-text">属性访问</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#this-绑定"><span class="toc-text">this 绑定</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES5"><span class="toc-text">ES5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Call-Stack"><span class="toc-text">Call Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Environment"><span class="toc-text">Environment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enviroment-Record-ER"><span class="toc-text">Enviroment Record(ER)</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
 
     <div class="post-content">
       
-        
-        
-
-        
-          <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>JavaScript 的语法让我感到非常不舒服，究其原因其实是因为两点：</p>
+        <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>JavaScript 的语法让我感到非常不舒服，究其原因其实是因为两点：</p>
 <ol>
 <li>动态语言</li>
 <li>原型编程</li>
@@ -341,76 +250,77 @@
 <h3 id="Enviroment-Record-ER"><a href="#Enviroment-Record-ER" class="headerlink" title="Enviroment Record(ER)"></a>Enviroment Record(ER)</h3><p>每一个 Environment 的结构会包含一个 ER 以及一个 outer，outer 其实就是上一层的 Environment，这点和 SC 很类似，不过是不完全一样的，下面的一个例子可以说明问题：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">1</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> y = <span class="number">2</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">globalEnvironment = &#123;</div><div class="line">    <span class="attr">environmentRecord</span>: &#123;</div><div class="line"> </div><div class="line">        <span class="comment">// built-ins:</span></div><div class="line">        <span class="built_in">Object</span>: <span class="function"><span class="keyword">function</span>,</span></div><div class="line">        <span class="title">Array</span>: <span class="title">function</span>,</div><div class="line">        // <span class="title">etc</span> ...</div><div class="line">    </div><div class="line">        // <span class="title">our</span> <span class="title">bindings</span>:</div><div class="line">        <span class="title">x</span>: 1,</div><div class="line">        <span class="title">func</span>: <span class="title">function</span>,</div><div class="line"></div><div class="line">    &#125;,</div><div class="line"> </div><div class="line">    <span class="title">outer</span>: <span class="title">null</span> // <span class="title">no</span> <span class="title">parent</span> <span class="title">environment</span></div><div class="line"> </div><div class="line">&#125;;</div><div class="line"> </div><div class="line">// <span class="title">environment</span> <span class="title">of</span> <span class="title">the</span> "<span class="title">foo</span>" <span class="title">function</span></div><div class="line"> </div><div class="line"><span class="title">fooEnvironment</span> = &#123;</div><div class="line">    environmentRecord: &#123;</div><div class="line">        <span class="attr">y</span>: <span class="number">2</span>,</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">outer</span>: globalEnvironment</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>也许你有这样的疑惑，为什么需要做这样的改变呢？<br>答案是为了 Efficiency！<br>需要提到的是，规定(specification)并不提倡将 ER 实现为一个 simple object，这意味着各大 Engine 在这里可以提供自定义的优化！仔细想一想就会发现 SC 的设计会导致一层一层地查找某个变量，这个效率实在是太过低下，为什么不把会用到的变量放入当前 ER 中以提供直接的访问？此外还可以将不用到的变量不保存，这两点可以通过静态分析做到，V8 Engine 却是也是这样做的。<br>此外 environment record 有两种类型 decorative environment record(VER) 和 object environment record(OER)，两者的区别在于前者处理 function activition 以及 catch 时的 environment record(相当于以前的 AO)，后者用于处理 global context 下的 function、variable 以及 with 语句下的变量 binding，这只是规定(specification)上的区别，在实际实现中，并没有这个标志来指定 ER 的区别。</p>
 
-        
       
     </div>
 
     
-
-    
-  </article>
-
-    
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/02/14/Hexo_With_GitHub/">Deploy Hexo Blogs on GitHub Pages</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Feb 14, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
       
-        
-        
 
-        
-          <h3 id="Create-a-GitHub-Page"><a href="#Create-a-GitHub-Page" class="headerlink" title="Create a GitHub Page"></a>Create a GitHub Page</h3><p>Follow the steps on this <a href="https://pages.github.com/" target="_blank" rel="external">page</a> to create a personal website, say <code>https://username.github.io</code>.</p>
-<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><p>After <code>git</code> and <code>nodejs</code> installed, get the Hexo installed by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
-<p>Try to get what you are confused about from this <a href="https://hexo.io/docs/" target="_blank" rel="external">page</a>.</p>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-https-username-github-io"><a href="#Deploy-to-https-username-github-io" class="headerlink" title="Deploy to https://username.github.io"></a>Deploy to <code>https://username.github.io</code></h3><p>Before the deploying, change the deploy settings:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># Deployment</div><div class="line">## Docs: https://hexo.io/docs/deployment.html</div><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: git@github.com:username/username.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
-<p>After the setting, the git deploy helper should be installed by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
-<p>Deploying:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure></p>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>作者: </span>
+      <span>ShiKaiWi</span>
+    </p>
+    <p class="copyright-item">
+      <span>来源: </span>
+      <a href="https://ShiKaiWi.github.io">https://ShiKaiWi.github.io</a>
+    </p>
+    <p class="copyright-item">
+      <span>链接: </span>
+      <a href="https://ShiKaiWi.github.io/2017/02/17/JavaScript-ES5-总结/">https://ShiKaiWi.github.io/2017/02/17/JavaScript-ES5-总结/</a>
+    </p>
 
-        
+    <p class="copyright-item lincese">
       
-    </div>
+      本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+    </p>
+  </div>
 
+
+
+      
+      
     
 
     
-  </article>
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/">JavaScript</a>
+          
+        </div>
 
+        
+        
+  <nav class="post-nav">
     
-  </section>
-
-  
-  <nav class="pagination">
+      <a class="prev" href="/2017/02/27/React-Redux-入门坑总结/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">React-Redux 入门坑总结</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
     
+    
+      <a class="next" href="/2017/02/14/Hexo_With_GitHub/">
+        <span class="next-text nav-default">Deploy Hexo Blogs on GitHub Pages</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
     
   </nav>
+
+      </footer>
+    
+  </article>
 
 
           </div>
           
+  <div class="comments" id="comments">
+    
+  </div>
+
         </div>  
       </main>
 
