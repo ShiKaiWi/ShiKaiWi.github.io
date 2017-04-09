@@ -40,7 +40,7 @@
 <meta property="og:url" content="https://ShiKaiWi.github.io/2017/03/05/Git-实践/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
 <meta property="og:description" content="1. git merge 时发生了什么? 如何处理？发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 p">
-<meta property="og:updated_time" content="2017-04-02T06:08:04.000Z">
+<meta property="og:updated_time" content="2017-04-09T14:32:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git-实践">
 <meta name="twitter:description" content="1. git merge 时发生了什么? 如何处理？发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 p">
@@ -179,9 +179,9 @@
     
     
   <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">Contents</h2>
+    <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-git-merge-时发生了什么-如何处理？"><span class="toc-text">1. git merge 时发生了什么? 如何处理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-arc-如何结合-phabricator-使用？"><span class="toc-text">2. arc 如何结合 phabricator 使用？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-arc"><span class="toc-text">安装 arc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一次-feature-的提交过程"><span class="toc-text">一次 feature 的提交过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-git-如何切换到任意结点下的某一个文件？"><span class="toc-text">3. git 如何切换到任意结点下的某一个文件？</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-git-merge-时发生了什么-如何处理？"><span class="toc-text">1. git merge 时发生了什么? 如何处理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-arc-如何结合-phabricator-使用？"><span class="toc-text">2. arc 如何结合 phabricator 使用？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-arc"><span class="toc-text">安装 arc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一次-feature-bug-的提交过程"><span class="toc-text">一次 feature/bug 的提交过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突"><span class="toc-text">如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-git-如何切换到任意结点下的某一个文件？"><span class="toc-text">3. git 如何切换到任意结点下的某一个文件？</span></a></li></ol>
     </div>
   </div>
 
@@ -197,8 +197,9 @@
 <p>很简单，通过 revert 恢复是最安全的方式（注意，revert 和 reset 不一样，reset 是恢复到参数指定的 commit 的状态，而 revert 是回滚指定 commit 的状态到上一次 commit）</p>
 <p>但是如果你使用 <code>git revert &lt;B2&#39;s SHA&gt;</code> 会出 conflicts，这是因为你理解错了 revert 的含义（通过 git revert –abort 可以回滚）,而出现 conflicts 的原因是一般 revert 只会用作 <code>revert HEAD</code>，因此 git 知道回滚到当前 commit 的上一次 commit的方法，没有其他选择，若是回滚到指定版本的话，git 并不知道如何跨 commit 回滚，因此必须要人来手动 merge 一下。</p>
 <p>在这里的情况我们得使用 <code>git revert HEAD</code>，但是即使如此，仍然不对，而且是出错，这是因为，回滚 C 的时候，发现 C 有两个父节点，因此必须指定回滚到哪一个结点才行，那么如何知道相应父节点的编号呢？通过 <code>git log</code> 即可查看父节点的顺序，有了顺序使用 <code>git revert HEAD -m &lt;number&gt;</code> 来回滚到指定的父节点（注意编号从 1 开始）。</p>
-<h3 id="2-arc-如何结合-phabricator-使用？"><a href="#2-arc-如何结合-phabricator-使用？" class="headerlink" title="2. arc 如何结合 phabricator 使用？"></a>2. arc 如何结合 phabricator 使用？</h3><p>phabricator 是 facebook 的工程代码管理集成工具，arc 是进行 phabricator 上的 code review 的重要工具，那么如何使用 arc 呢？</p>
-<h4 id="安装-arc"><a href="#安装-arc" class="headerlink" title="安装 arc"></a>安装 arc</h4><h4 id="一次-feature-的提交过程"><a href="#一次-feature-的提交过程" class="headerlink" title="一次 feature 的提交过程"></a>一次 feature 的提交过程</h4><ol>
+<h3 id="2-arc-如何结合-phabricator-使用？"><a href="#2-arc-如何结合-phabricator-使用？" class="headerlink" title="2. arc 如何结合 phabricator 使用？"></a>2. arc 如何结合 phabricator 使用？</h3><p>phabricator 是一种工程代码管理集成工具，arc 是进行 phabricator 上的 code review 的重要工具，那么如何使用 arc 呢？</p>
+<h4 id="安装-arc"><a href="#安装-arc" class="headerlink" title="安装 arc"></a>安装 arc</h4><p>参考 <a href="https://secure.phabricator.com/book/phabricator/article/arcanist_quick_start/" target="_blank" rel="external">这里</a></p>
+<h4 id="一次-feature-bug-的提交过程"><a href="#一次-feature-bug-的提交过程" class="headerlink" title="一次 feature/bug 的提交过程"></a>一次 feature/bug 的提交过程</h4><ol>
 <li><code>git pull</code> 保证 master 分支最新</li>
 <li><code>git checkout -b feature/xxx</code> 进行代码开发</li>
 <li><code>git add &lt;files needed to be committed&gt;; git commit -m &quot;...&quot;</code> commit 代码（在 commit 之前最好使用 git diff 或者 其他 diff 视图工具来进行 diff 查看，以防出现什么低级错误）</li>
@@ -206,7 +207,12 @@
 <li>代码 review 时出现需要改动的地方，那么改动代码后，使用 <code>git commit --ammed</code> 来进行 commit，这样就会保证始终只有一次 commit，这样的话，就会方便每次 arc diff 的时候，不必指定 base</li>
 <li>review 通过以后 <code>arc land</code> 会将该分支 merge 到 master</li>
 </ol>
-<h3 id="3-git-如何切换到任意结点下的某一个文件？"><a href="#3-git-如何切换到任意结点下的某一个文件？" class="headerlink" title="3. git 如何切换到任意结点下的某一个文件？"></a>3. git 如何切换到任意结点下的某一个文件？</h3>
+<h4 id="如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突"><a href="#如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突" class="headerlink" title="如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突"></a>如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突</h4><ol>
+<li>本地 merge 一次（解决冲突、add file、commit）</li>
+<li>再次更新 diff，将 base 设为最新的 master head，等待 review</li>
+</ol>
+<h3 id="3-git-如何切换到任意结点下的某一个文件？"><a href="#3-git-如何切换到任意结点下的某一个文件？" class="headerlink" title="3. git 如何切换到任意结点下的某一个文件？"></a>3. git 如何切换到任意结点下的某一个文件？</h3><p><code>git checkout &lt;commit-hash&gt; path/to/file</code></p>
+
       
     </div>
 
@@ -255,13 +261,13 @@
       <a class="prev" href="/2017/04/03/ES6-异步编程/">
         <i class="iconfont icon-left"></i>
         <span class="prev-text nav-default">ES6-异步编程</span>
-        <span class="prev-text nav-mobile">Prev</span>
+        <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
     
       <a class="next" href="/2017/02/27/React-Redux-入门坑总结/">
         <span class="next-text nav-default">React-Redux 入门坑总结</span>
-        <span class="prev-text nav-mobile">Next</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -318,11 +324,11 @@
 
 <div class="copyright">
   <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
   </span>
   
   <span class="theme-info">
-    Theme - 
+    主题 - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
