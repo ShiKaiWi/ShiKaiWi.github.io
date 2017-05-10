@@ -40,7 +40,7 @@
 <meta property="og:url" content="https://ShiKaiWi.github.io/2017/03/05/Git-实践/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
 <meta property="og:description" content="1. git merge 时发生了什么? 如何处理？发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 p">
-<meta property="og:updated_time" content="2017-04-09T14:32:35.000Z">
+<meta property="og:updated_time" content="2017-04-24T16:46:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git-实践">
 <meta name="twitter:description" content="1. git merge 时发生了什么? 如何处理？发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 p">
@@ -204,7 +204,7 @@
 <li><code>git checkout -b feature/xxx</code> 进行代码开发</li>
 <li><code>git add &lt;files needed to be committed&gt;; git commit -m &quot;...&quot;</code> commit 代码（在 commit 之前最好使用 git diff 或者 其他 diff 视图工具来进行 diff 查看，以防出现什么低级错误）</li>
 <li><code>arc diff</code> 这个时候提交 diff，根据提示需要指定 diff 的 base，如果你只是 commit 过一次，那么一般使用 HEAD^ 作为 base（这也是默认选项）</li>
-<li>代码 review 时出现需要改动的地方，那么改动代码后，使用 <code>git commit --ammed</code> 来进行 commit，这样就会保证始终只有一次 commit，这样的话，就会方便每次 arc diff 的时候，不必指定 base</li>
+<li>代码 review 时出现需要改动的地方，那么改动代码后，使用 <code>git commit --amend</code> 来进行 commit，这样就会保证始终只有一次 commit，这样的话，就会方便每次 arc diff 的时候，不必指定 base</li>
 <li>review 通过以后 <code>arc land</code> 会将该分支 merge 到 master</li>
 </ol>
 <h4 id="如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突"><a href="#如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突" class="headerlink" title="如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突"></a>如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突</h4><ol>
