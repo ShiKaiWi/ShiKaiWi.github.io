@@ -159,6 +159,63 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2017/05/21/可读性好的代码/">可读性好的代码</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          May 21, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。</p>
+<h1 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h1><h2 id="命名要具体"><a href="#命名要具体" class="headerlink" title="命名要具体"></a>命名要具体</h2><p>最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向 get 描述的那样，很简单就拉取到了，这里使用 fetch 是更好的选择。</p>
+<h2 id="避免使用没意义的名字"><a href="#避免使用没意义的名字" class="headerlink" title="避免使用没意义的名字"></a>避免使用没意义的名字</h2><p>如 ret、result、tmp，除非这个变量只会出现在三行左右的地方</p>
+<h2 id="添加更多信息到命名之中"><a href="#添加更多信息到命名之中" class="headerlink" title="添加更多信息到命名之中"></a>添加更多信息到命名之中</h2><p>比如 size，size 时大小的含义，但是如果有单位区分的话，那么一个 size 很容易造成误解，可以加上 size_KB/size_kb</p>
+<h2 id="属性、方法的命名传统（工作的时候遇到的）"><a href="#属性、方法的命名传统（工作的时候遇到的）" class="headerlink" title="属性、方法的命名传统（工作的时候遇到的）"></a>属性、方法的命名传统（工作的时候遇到的）</h2><p>属性的话，一般是 名词／形容词<br>方法的命名一般是 动词词组</p>
+<h2 id="避免使用含义不清晰的词"><a href="#避免使用含义不清晰的词" class="headerlink" title="避免使用含义不清晰的词"></a>避免使用含义不清晰的词</h2><p>比如 filter、limit， 当你需要使用 limit 的时候，使用 max、min 来代替更好，filter 的情况使用 select／remove 更好</p>
+<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><h2 id="comment-需要的判断法则"><a href="#comment-需要的判断法则" class="headerlink" title="comment 需要的判断法则"></a>comment 需要的判断法则</h2><blockquote>
+<p>Anticipate which parts of your code will make readers say “Huh?” and comment those.</p>
+<h2 id="对代码进行高层次的介绍"><a href="#对代码进行高层次的介绍" class="headerlink" title="对代码进行高层次的介绍"></a>对代码进行高层次的介绍</h2><p>很多时候从代码整体的结构给出的注释很有价值</p>
+<h2 id="使用-example-来-comment"><a href="#使用-example-来-comment" class="headerlink" title="使用 example 来 comment"></a>使用 example 来 comment</h2><p>example 让人清晰明了</p>
+</blockquote>
+<h1 id="condition-statement"><a href="#condition-statement" class="headerlink" title="condition statement"></a>condition statement</h1><h2 id="尽量减少-if-语句"><a href="#尽量减少-if-语句" class="headerlink" title="尽量减少 if 语句"></a>尽量减少 if 语句</h2><p>越少的 if 语句意味着代码可读性更好，代码更容易测试。</p>
+<h2 id="先处理简单的条件"><a href="#先处理简单的条件" class="headerlink" title="先处理简单的条件"></a>先处理简单的条件</h2><p>先处理简单的条件会让人的思维更加清晰</p>
+<h2 id="避免出现嵌套的-if-语句"><a href="#避免出现嵌套的-if-语句" class="headerlink" title="避免出现嵌套的 if 语句"></a>避免出现嵌套的 if 语句</h2><p>这样的代码看着就感觉很乱，如果能避免一定要避免</p>
+<h1 id="break-down-giant-code-block"><a href="#break-down-giant-code-block" class="headerlink" title="break down giant code block"></a>break down giant code block</h1><p>如果能讲一块集中的代码很好的抽象成 mehtod 自然是更好的</p>
+<h1 id="变量管理"><a href="#变量管理" class="headerlink" title="变量管理"></a>变量管理</h1><h2 id="消除不必要的变量"><a href="#消除不必要的变量" class="headerlink" title="消除不必要的变量"></a>消除不必要的变量</h2><p>比如像是连续出现的两次相同的变量名，完全没必要出现</p>
+<h2 id="缩小变量的-scope"><a href="#缩小变量的-scope" class="headerlink" title="缩小变量的 scope"></a>缩小变量的 scope</h2><p>这一点会让代码可读性好上不少，基本上可以让</p>
+<h2 id="多使用-常量（只赋值一次的变量）"><a href="#多使用-常量（只赋值一次的变量）" class="headerlink" title="多使用 常量（只赋值一次的变量）"></a>多使用 常量（只赋值一次的变量）</h2><p>如果一个变量的类型是常量，那么自然对于测试、读方便很多，尤其是和第二点结合起来</p>
+<h1 id="method／function"><a href="#method／function" class="headerlink" title="method／function"></a>method／function</h1><p>最重要的原则 one task at a time</p>
+<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><h2 id="为-input-output-写产生函数"><a href="#为-input-output-写产生函数" class="headerlink" title="为 input output 写产生函数"></a>为 input output 写产生函数</h2><p>没有必要每次都手动生成 input、output</p>
+<h2 id="减少对外部的依赖"><a href="#减少对外部的依赖" class="headerlink" title="减少对外部的依赖"></a>减少对外部的依赖</h2><p>写测试最麻烦的地方在于被测试的模块对外部以来比较高，因此如果能减少外部的依赖，那么 test 的工作量将会减少</p>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2017/04/23/痛苦的反思/">Move Fast</a>
         
       </h1>
@@ -185,6 +242,8 @@
 <p>最终和往常一样，我的内疚感使我决定重新站立起来，我也真真切切地明白了这样的道理，没有人能够随随便便成功！如果这样想，我想自己也会变得更加坚强吧。</p>
 <p>我想自己接下来的两个月里，要努力地在前端这方面进行更深入地探索与练习，一定要多写代码。</p>
 <p>此外，我这周的工作让我发现自己的工作效率非常低下，我总结了一下原因：<br>写代码时会出现神思游离，导致出现很难发现的 bug（比如变量名写错了）<br>解决方案：<br>a. 模块化实现功能（在纸上列举出需要的步骤，一步步完成）<br>b. 在写代码的时候，一定要有意识地意识到自己在写不能出现低级错误、style 正确（使用各种 lint 工具）的code</p>
+<p>最近，一个前辈负责写数据逻辑部分的代码，我看到他的写法，第一次感觉自己是太渺小了，我觉得自己要变得更厉害，要比他还厉害。</p>
+<p>我现在的情况很是纠结，工作的事情多，自己又想看与语言无关的知识，同时又想看工作中使用的框架的源码。</p>
 
         
       
@@ -312,14 +371,20 @@
 <h4 id="一次-feature-bug-的提交过程"><a href="#一次-feature-bug-的提交过程" class="headerlink" title="一次 feature/bug 的提交过程"></a>一次 feature/bug 的提交过程</h4><ol>
 <li><code>git pull</code> 保证 master 分支最新</li>
 <li><code>git checkout -b feature/xxx</code> 进行代码开发</li>
-<li><code>git add &lt;files needed to be committed&gt;; git commit -m &quot;...&quot;</code> commit 代码（在 commit 之前最好使用 git diff 或者 其他 diff 视图工具来进行 diff 查看，以防出现什么低级错误）</li>
-<li><code>arc diff</code> 这个时候提交 diff，根据提示需要指定 diff 的 base，如果你只是 commit 过一次，那么一般使用 HEAD^ 作为 base（这也是默认选项）</li>
+<li><code>git add &lt;files needed to be committed&gt;; git commit -m &quot;...&quot;</code> commit 代码</li>
+<li><code>arc diff</code> 这个时候提交 diff，根据提示需要指定 diff 的 base，如果你只是 commit 过一次，那么一般使用 HEAD^ 作为 base（这也是默认选项）如果觉得不放心的话，最好使用 <code>arc diff --preiview</code> 来确认一下自己这次 diff 的提交是否出错</li>
 <li>代码 review 时出现需要改动的地方，那么改动代码后，使用 <code>git commit --amend</code> 来进行 commit，这样就会保证始终只有一次 commit，这样的话，就会方便每次 arc diff 的时候，不必指定 base</li>
 <li>review 通过以后 <code>arc land</code> 会将该分支 merge 到 master</li>
 </ol>
 <h4 id="如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突"><a href="#如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突" class="headerlink" title="如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突"></a>如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突</h4><ol>
 <li>本地 merge 一次（解决冲突、add file、commit）</li>
-<li>再次更新 diff，将 base 设为最新的 master head，等待 review</li>
+<li>再次更新 diff，将 base 设为最新的 master head，等待 review<br>更好的解决办法是：</li>
+<li><code>git checkout master</code></li>
+<li><code>git pull</code></li>
+<li><code>git checkout &lt;diff-branch&gt;</code></li>
+<li><code>git rebase master</code></li>
+<li>若是出现冲突，merge 完毕后，可以使用 <code>rebase --continue</code></li>
+<li><code>arc diff HEAD^</code></li>
 </ol>
 <h3 id="3-git-如何切换到任意结点下的某一个文件？"><a href="#3-git-如何切换到任意结点下的某一个文件？" class="headerlink" title="3. git 如何切换到任意结点下的某一个文件？"></a>3. git 如何切换到任意结点下的某一个文件？</h3><p><code>git checkout &lt;commit-hash&gt; path/to/file</code></p>
 
@@ -618,11 +683,11 @@
 
 <div class="copyright">
   <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
   </span>
   
   <span class="theme-info">
-    Theme - 
+    主题 - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
