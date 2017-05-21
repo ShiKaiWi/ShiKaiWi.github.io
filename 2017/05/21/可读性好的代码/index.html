@@ -42,7 +42,7 @@ Name命名要具体最常见的例子便是 get* 的使用，比如从服务器�
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
 <meta property="og:description" content="写在前面我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。
 Name命名要具体最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向 ge">
-<meta property="og:updated_time" content="2017-05-20T17:56:36.000Z">
+<meta property="og:updated_time" content="2017-05-21T03:59:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可读性好的代码">
 <meta name="twitter:description" content="写在前面我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。
@@ -182,9 +182,9 @@ Name命名要具体最常见的例子便是 get* 的使用，比如从服务器�
     
     
   <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">文章目录</h2>
+    <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Name"><span class="toc-text">Name</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#命名要具体"><span class="toc-text">命名要具体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#避免使用没意义的名字"><span class="toc-text">避免使用没意义的名字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加更多信息到命名之中"><span class="toc-text">添加更多信息到命名之中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#属性、方法的命名传统（工作的时候遇到的）"><span class="toc-text">属性、方法的命名传统（工作的时候遇到的）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#避免使用含义不清晰的词"><span class="toc-text">避免使用含义不清晰的词</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Comment"><span class="toc-text">Comment</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#comment-需要的判断法则"><span class="toc-text">comment 需要的判断法则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对代码进行高层次的介绍"><span class="toc-text">对代码进行高层次的介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-example-来-comment"><span class="toc-text">使用 example 来 comment</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#condition-statement"><span class="toc-text">condition statement</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#尽量减少-if-语句"><span class="toc-text">尽量减少 if 语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#先处理简单的条件"><span class="toc-text">先处理简单的条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#避免出现嵌套的-if-语句"><span class="toc-text">避免出现嵌套的 if 语句</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#break-down-giant-code-block"><span class="toc-text">break down giant code block</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#变量管理"><span class="toc-text">变量管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#消除不必要的变量"><span class="toc-text">消除不必要的变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缩小变量的-scope"><span class="toc-text">缩小变量的 scope</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多使用-常量（只赋值一次的变量）"><span class="toc-text">多使用 常量（只赋值一次的变量）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#method／function"><span class="toc-text">method／function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#test"><span class="toc-text">test</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#为-input-output-写产生函数"><span class="toc-text">为 input output 写产生函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#减少对外部的依赖"><span class="toc-text">减少对外部的依赖</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Name"><span class="toc-text">Name</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命名要具体"><span class="toc-text">命名要具体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免使用没意义的名字"><span class="toc-text">避免使用没意义的名字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加更多信息到命名之中"><span class="toc-text">添加更多信息到命名之中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#属性、方法的命名传统（工作的时候遇到的）"><span class="toc-text">属性、方法的命名传统（工作的时候遇到的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免使用含义不清晰的词"><span class="toc-text">避免使用含义不清晰的词</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Comment"><span class="toc-text">Comment</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#comment-需要的判断法则"><span class="toc-text">comment 需要的判断法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对代码进行高层次的介绍"><span class="toc-text">对代码进行高层次的介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-example-来-comment"><span class="toc-text">使用 example 来 comment</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#condition-statement"><span class="toc-text">condition statement</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#尽量减少-if-语句"><span class="toc-text">尽量减少 if 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#先处理简单的条件"><span class="toc-text">先处理简单的条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#避免出现嵌套的-if-语句"><span class="toc-text">避免出现嵌套的 if 语句</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#break-down-giant-code-block"><span class="toc-text">break down giant code block</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#变量管理"><span class="toc-text">变量管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消除不必要的变量"><span class="toc-text">消除不必要的变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缩小变量的-scope"><span class="toc-text">缩小变量的 scope</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多使用-常量（只赋值一次的变量）"><span class="toc-text">多使用 常量（只赋值一次的变量）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#method／function"><span class="toc-text">method／function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#test"><span class="toc-text">test</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为-input-output-写产生函数"><span class="toc-text">为 input output 写产生函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减少对外部的依赖"><span class="toc-text">减少对外部的依赖</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
@@ -192,26 +192,26 @@ Name命名要具体最常见的例子便是 get* 的使用，比如从服务器�
     <div class="post-content">
       
         <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。</p>
-<h1 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h1><h2 id="命名要具体"><a href="#命名要具体" class="headerlink" title="命名要具体"></a>命名要具体</h2><p>最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向 get 描述的那样，很简单就拉取到了，这里使用 fetch 是更好的选择。</p>
-<h2 id="避免使用没意义的名字"><a href="#避免使用没意义的名字" class="headerlink" title="避免使用没意义的名字"></a>避免使用没意义的名字</h2><p>如 ret、result、tmp，除非这个变量只会出现在三行左右的地方</p>
-<h2 id="添加更多信息到命名之中"><a href="#添加更多信息到命名之中" class="headerlink" title="添加更多信息到命名之中"></a>添加更多信息到命名之中</h2><p>比如 size，size 时大小的含义，但是如果有单位区分的话，那么一个 size 很容易造成误解，可以加上 size_KB/size_kb</p>
-<h2 id="属性、方法的命名传统（工作的时候遇到的）"><a href="#属性、方法的命名传统（工作的时候遇到的）" class="headerlink" title="属性、方法的命名传统（工作的时候遇到的）"></a>属性、方法的命名传统（工作的时候遇到的）</h2><p>属性的话，一般是 名词／形容词<br>方法的命名一般是 动词词组</p>
-<h2 id="避免使用含义不清晰的词"><a href="#避免使用含义不清晰的词" class="headerlink" title="避免使用含义不清晰的词"></a>避免使用含义不清晰的词</h2><p>比如 filter、limit， 当你需要使用 limit 的时候，使用 max、min 来代替更好，filter 的情况使用 select／remove 更好</p>
-<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><h2 id="comment-需要的判断法则"><a href="#comment-需要的判断法则" class="headerlink" title="comment 需要的判断法则"></a>comment 需要的判断法则</h2><blockquote>
+<h1 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h1><h3 id="命名要具体"><a href="#命名要具体" class="headerlink" title="命名要具体"></a>命名要具体</h3><p>最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向 get 描述的那样，很简单就拉取到了，这里使用 fetch 是更好的选择。</p>
+<h3 id="避免使用没意义的名字"><a href="#避免使用没意义的名字" class="headerlink" title="避免使用没意义的名字"></a>避免使用没意义的名字</h3><p>如 ret、result、tmp，除非这个变量只会出现在三行左右的地方</p>
+<h3 id="添加更多信息到命名之中"><a href="#添加更多信息到命名之中" class="headerlink" title="添加更多信息到命名之中"></a>添加更多信息到命名之中</h3><p>比如 size，size 时大小的含义，但是如果有单位区分的话，那么一个 size 很容易造成误解，可以加上 size_KB/size_kb</p>
+<h3 id="属性、方法的命名传统（工作的时候遇到的）"><a href="#属性、方法的命名传统（工作的时候遇到的）" class="headerlink" title="属性、方法的命名传统（工作的时候遇到的）"></a>属性、方法的命名传统（工作的时候遇到的）</h3><p>属性的话，一般是 名词／形容词<br>方法的命名一般是 动词词组</p>
+<h3 id="避免使用含义不清晰的词"><a href="#避免使用含义不清晰的词" class="headerlink" title="避免使用含义不清晰的词"></a>避免使用含义不清晰的词</h3><p>比如 filter、limit， 当你需要使用 limit 的时候，使用 max、min 来代替更好，filter 的情况使用 select／remove 更好</p>
+<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><h3 id="comment-需要的判断法则"><a href="#comment-需要的判断法则" class="headerlink" title="comment 需要的判断法则"></a>comment 需要的判断法则</h3><blockquote>
 <p>Anticipate which parts of your code will make readers say “Huh?” and comment those.</p>
-<h2 id="对代码进行高层次的介绍"><a href="#对代码进行高层次的介绍" class="headerlink" title="对代码进行高层次的介绍"></a>对代码进行高层次的介绍</h2><p>很多时候从代码整体的结构给出的注释很有价值</p>
-<h2 id="使用-example-来-comment"><a href="#使用-example-来-comment" class="headerlink" title="使用 example 来 comment"></a>使用 example 来 comment</h2><p>example 让人清晰明了</p>
 </blockquote>
-<h1 id="condition-statement"><a href="#condition-statement" class="headerlink" title="condition statement"></a>condition statement</h1><h2 id="尽量减少-if-语句"><a href="#尽量减少-if-语句" class="headerlink" title="尽量减少 if 语句"></a>尽量减少 if 语句</h2><p>越少的 if 语句意味着代码可读性更好，代码更容易测试。</p>
-<h2 id="先处理简单的条件"><a href="#先处理简单的条件" class="headerlink" title="先处理简单的条件"></a>先处理简单的条件</h2><p>先处理简单的条件会让人的思维更加清晰</p>
-<h2 id="避免出现嵌套的-if-语句"><a href="#避免出现嵌套的-if-语句" class="headerlink" title="避免出现嵌套的 if 语句"></a>避免出现嵌套的 if 语句</h2><p>这样的代码看着就感觉很乱，如果能避免一定要避免</p>
+<h3 id="对代码进行高层次的介绍"><a href="#对代码进行高层次的介绍" class="headerlink" title="对代码进行高层次的介绍"></a>对代码进行高层次的介绍</h3><p>很多时候从代码整体的结构给出的注释很有价值</p>
+<h2 id="使用-example-来-comment"><a href="#使用-example-来-comment" class="headerlink" title="使用 example 来 comment"></a>使用 example 来 comment</h2><p>example 让人清晰明了</p>
+<h1 id="condition-statement"><a href="#condition-statement" class="headerlink" title="condition statement"></a>condition statement</h1><h3 id="尽量减少-if-语句"><a href="#尽量减少-if-语句" class="headerlink" title="尽量减少 if 语句"></a>尽量减少 if 语句</h3><p>越少的 if 语句意味着代码可读性更好，代码更容易测试。</p>
+<h3 id="先处理简单的条件"><a href="#先处理简单的条件" class="headerlink" title="先处理简单的条件"></a>先处理简单的条件</h3><p>先处理简单的条件会让人的思维更加清晰</p>
+<h3 id="避免出现嵌套的-if-语句"><a href="#避免出现嵌套的-if-语句" class="headerlink" title="避免出现嵌套的 if 语句"></a>避免出现嵌套的 if 语句</h3><p>这样的代码看着就感觉很乱，如果能避免一定要避免</p>
 <h1 id="break-down-giant-code-block"><a href="#break-down-giant-code-block" class="headerlink" title="break down giant code block"></a>break down giant code block</h1><p>如果能讲一块集中的代码很好的抽象成 mehtod 自然是更好的</p>
-<h1 id="变量管理"><a href="#变量管理" class="headerlink" title="变量管理"></a>变量管理</h1><h2 id="消除不必要的变量"><a href="#消除不必要的变量" class="headerlink" title="消除不必要的变量"></a>消除不必要的变量</h2><p>比如像是连续出现的两次相同的变量名，完全没必要出现</p>
-<h2 id="缩小变量的-scope"><a href="#缩小变量的-scope" class="headerlink" title="缩小变量的 scope"></a>缩小变量的 scope</h2><p>这一点会让代码可读性好上不少，基本上可以让</p>
+<h1 id="变量管理"><a href="#变量管理" class="headerlink" title="变量管理"></a>变量管理</h1><h3 id="消除不必要的变量"><a href="#消除不必要的变量" class="headerlink" title="消除不必要的变量"></a>消除不必要的变量</h3><p>比如像是连续出现的两次相同的变量名，完全没必要出现</p>
+<h3 id="缩小变量的-scope"><a href="#缩小变量的-scope" class="headerlink" title="缩小变量的 scope"></a>缩小变量的 scope</h3><p>这一点会让代码可读性好上不少，基本上可以让</p>
 <h2 id="多使用-常量（只赋值一次的变量）"><a href="#多使用-常量（只赋值一次的变量）" class="headerlink" title="多使用 常量（只赋值一次的变量）"></a>多使用 常量（只赋值一次的变量）</h2><p>如果一个变量的类型是常量，那么自然对于测试、读方便很多，尤其是和第二点结合起来</p>
 <h1 id="method／function"><a href="#method／function" class="headerlink" title="method／function"></a>method／function</h1><p>最重要的原则 one task at a time</p>
-<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><h2 id="为-input-output-写产生函数"><a href="#为-input-output-写产生函数" class="headerlink" title="为 input output 写产生函数"></a>为 input output 写产生函数</h2><p>没有必要每次都手动生成 input、output</p>
-<h2 id="减少对外部的依赖"><a href="#减少对外部的依赖" class="headerlink" title="减少对外部的依赖"></a>减少对外部的依赖</h2><p>写测试最麻烦的地方在于被测试的模块对外部以来比较高，因此如果能减少外部的依赖，那么 test 的工作量将会减少</p>
+<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><h3 id="为-input-output-写产生函数"><a href="#为-input-output-写产生函数" class="headerlink" title="为 input output 写产生函数"></a>为 input output 写产生函数</h3><p>没有必要每次都手动生成 input、output</p>
+<h3 id="减少对外部的依赖"><a href="#减少对外部的依赖" class="headerlink" title="减少对外部的依赖"></a>减少对外部的依赖</h3><p>写测试最麻烦的地方在于被测试的模块对外部以来比较高，因此如果能减少外部的依赖，那么 test 的工作量将会减少</p>
 
       
     </div>
@@ -261,7 +261,7 @@ Name命名要具体最常见的例子便是 get* 的使用，比如从服务器�
     
       <a class="next" href="/2017/04/23/痛苦的反思/">
         <span class="next-text nav-default">Move Fast</span>
-        <span class="prev-text nav-mobile">下一篇</span>
+        <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -318,11 +318,11 @@ Name命名要具体最常见的例子便是 get* 的使用，比如从服务器�
 
 <div class="copyright">
   <span class="power-by">
-    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
   </span>
   
   <span class="theme-info">
-    主题 - 
+    Theme - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
