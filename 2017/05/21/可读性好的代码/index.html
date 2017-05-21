@@ -44,7 +44,7 @@ Name1.命名要具体
 <meta property="og:description" content="写在前面我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。
 Name1.命名要具体
 最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向">
-<meta property="og:updated_time" content="2017-05-21T04:04:46.000Z">
+<meta property="og:updated_time" content="2017-05-21T04:06:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可读性好的代码">
 <meta name="twitter:description" content="写在前面我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。
@@ -201,20 +201,14 @@ Name1.命名要具体
 <p>如 ret、result、tmp，除非这个变量只会出现在三行左右的地方</p>
 <p>3.添加更多信息到命名之中</p>
 <p>比如 size，size 时大小的含义，但是如果有单位区分的话，那么一个 size 很容易造成误解，可以加上 size_KB/size_kb</p>
-<ol>
-<li>属性、方法的命名传统（工作的时候遇到的）</li>
-</ol>
+<p>4.属性、方法的命名传统（工作的时候遇到的）</p>
 <p>属性的话，一般是 名词／形容词<br>方法的命名一般是 动词词组</p>
-<ol>
-<li>避免使用含义不清晰的词</li>
-</ol>
+<p>5.避免使用含义不清晰的词</p>
 <p>比如 filter、limit， 当你需要使用 limit 的时候，使用 max、min 来代替更好，filter 的情况使用 select／remove 更好</p>
-<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><ol>
-<li>comment 需要的判断法则<blockquote>
+<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><p>1.comment 需要的判断法则</p>
+<blockquote>
 <p>Anticipate which parts of your code will make readers say “Huh?” and comment those.</p>
 </blockquote>
-</li>
-</ol>
 <p>2.对代码进行高层次的介绍</p>
 <p>很多时候从代码整体的结构给出的注释很有价值</p>
 <p>3.使用 example 来 comment</p>
