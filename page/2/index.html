@@ -27,12 +27,12 @@
 
 
 
-<link rel="canonical" href="https://ShiKaiWi.github.io/archives/2017/05/"/>
+<link rel="canonical" href="https://ShiKaiWi.github.io/page/2/"/>
 
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="ShiKaiWi's Homepage">
-<meta property="og:url" content="https://ShiKaiWi.github.io/archives/2017/05/index.html">
+<meta property="og:url" content="https://ShiKaiWi.github.io/page/2/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ShiKaiWi's Homepage">
@@ -72,11 +72,7 @@
 
 
 
-    <title>
-  
-    Archives · ShiKaiWi's Homepage
-  
-</title>
+    <title> ShiKaiWi's Homepage </title>
   </head>
 
   <body>
@@ -156,73 +152,69 @@
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  
-  <section id="archive" class="archive">
+  <section id="posts" class="posts">
     
       
-        <div class="archive-title">
-          <h2 class="archive-name"> All </h2>
-          <span class="archive-post-counter">
-            11 Posts In Total
-          </span>
-        </div>
-      
-    
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/02/14/Hexo_With_GitHub/">Deploy Hexo Blogs on GitHub Pages</a>
+        
+      </h1>
 
-    
-      
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h2 class="archive-year">2017</h2>
-          </div>
-        
-      
-      
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            05-21
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/05/21/值得记录的一些小问题/" class="archive-post-link">
-            值得记录的一些小问题
-          </a>
+      <div class="post-meta">
+        <span class="post-time">
+          Feb 14, 2017
         </span>
       </div>
+    </header>
+
     
+    
+
+    <div class="post-content">
       
         
         
 
         
+          <h3 id="Create-a-GitHub-Page"><a href="#Create-a-GitHub-Page" class="headerlink" title="Create a GitHub Page"></a>Create a GitHub Page</h3><p>Follow the steps on this <a href="https://pages.github.com/" target="_blank" rel="external">page</a> to create a personal website, say <code>https://username.github.io</code>.</p>
+<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><p>After <code>git</code> and <code>nodejs</code> installed, get the Hexo installed by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
+<p>Try to get what you are confused about from this <a href="https://hexo.io/docs/" target="_blank" rel="external">page</a>.</p>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-https-username-github-io"><a href="#Deploy-to-https-username-github-io" class="headerlink" title="Deploy to https://username.github.io"></a>Deploy to <code>https://username.github.io</code></h3><p>Before the deploying, change the deploy settings:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># Deployment</div><div class="line">## Docs: https://hexo.io/docs/deployment.html</div><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: git@github.com:username/username.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>After the setting, the git deploy helper should be installed by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>Deploying:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure></p>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+        
       
-      
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            05-21
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/05/21/可读性好的代码/" class="archive-post-link">
-            可读性好的代码
-          </a>
-        </span>
-      </div>
+    </div>
+
+    
+
+    
+  </article>
+
     
   </section>
 
   
   <nav class="pagination">
     
+      <a class="prev" href="/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">Prev</span>
+      </a>
+    
     
   </nav>
-
 
 
           </div>
