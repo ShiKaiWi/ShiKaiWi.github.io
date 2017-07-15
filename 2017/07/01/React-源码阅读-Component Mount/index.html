@@ -31,7 +31,7 @@
 
 
 
-<link rel="canonical" href="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-2/"/>
+<link rel="canonical" href="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-Component Mount/"/>
 
 
 <meta name="description" content="Mount 一个 ComponentcallstackReactDomStackEntry =&amp;gt; ReactMount =&amp;gt; InstantiateReactComponent =&amp;gt; CompositeComponent
@@ -43,7 +43,7 @@ render
 unmountCo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React-源码阅读[2]">
-<meta property="og:url" content="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-2/index.html">
+<meta property="og:url" content="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-Component Mount/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
 <meta property="og:description" content="Mount 一个 ComponentcallstackReactDomStackEntry =&amp;gt; ReactMount =&amp;gt; InstantiateReactComponent =&amp;gt; CompositeComponent
 ReactMountInterfaces:
@@ -52,7 +52,7 @@ scrollMonitor
 renderSubtreeIntoContainer
 render
 unmountCo">
-<meta property="og:updated_time" content="2017-07-06T17:54:29.000Z">
+<meta property="og:updated_time" content="2017-07-15T00:23:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React-源码阅读[2]">
 <meta name="twitter:description" content="Mount 一个 ComponentcallstackReactDomStackEntry =&amp;gt; ReactMount =&amp;gt; InstantiateReactComponent =&amp;gt; CompositeComponent
@@ -197,7 +197,7 @@ unmountCo">
     
     
   <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">文章目录</h2>
+    <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
       <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mount-一个-Component"><span class="toc-text">Mount 一个 Component</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#callstack"><span class="toc-text">callstack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReactMount"><span class="toc-text">ReactMount</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#renderNewRootComponent"><span class="toc-text">_renderNewRootComponent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#batchedMountComponentIntoNode"><span class="toc-text">batchedMountComponentIntoNode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mountComponentIntoNode"><span class="toc-text">mountComponentIntoNode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mountImageIntoNode"><span class="toc-text">_mountImageIntoNode</span></a></li></ol></li></ol>
     </div>
@@ -272,16 +272,16 @@ unmountCo">
 
   <div class="post-copyright">
     <p class="copyright-item">
-      <span>作者: </span>
+      <span>Author: </span>
       <span>ShiKaiWi</span>
     </p>
     <p class="copyright-item">
-      <span>来源: </span>
+      <span>Origin: </span>
       <a href="https://ShiKaiWi.github.io">https://ShiKaiWi.github.io</a>
     </p>
     <p class="copyright-item">
-      <span>链接: </span>
-      <a href="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-2/">https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-2/</a>
+      <span>Link: </span>
+      <a href="https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-Component Mount/">https://ShiKaiWi.github.io/2017/07/01/React-源码阅读-Component Mount/</a>
     </p>
 
     <p class="copyright-item lincese">
@@ -308,16 +308,16 @@ unmountCo">
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2017/07/07/React-源码阅读-Component更新-md/">
+      <a class="prev" href="/2017/07/07/React-源码阅读-Component Update/">
         <i class="iconfont icon-left"></i>
         <span class="prev-text nav-default">React-源码阅读-Component更新.md</span>
-        <span class="prev-text nav-mobile">上一篇</span>
+        <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
       <a class="next" href="/2017/06/15/Design-Rules/">
         <span class="next-text nav-default">Design-Rules</span>
-        <span class="prev-text nav-mobile">下一篇</span>
+        <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -374,11 +374,11 @@ unmountCo">
 
 <div class="copyright">
   <span class="power-by">
-    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
   </span>
   
   <span class="theme-info">
-    主题 - 
+    Theme - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
