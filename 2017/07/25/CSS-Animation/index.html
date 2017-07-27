@@ -12,12 +12,12 @@
 
 
 
-  <meta name="description" content="前端面试方法"/>
+  <meta name="description" content="CSS-Animation"/>
 
 
 
 
-  <meta name="keywords" content="面试," />
+  <meta name="keywords" content="css," />
 
 
 
@@ -31,40 +31,19 @@
 
 
 
-<link rel="canonical" href="https://ShiKaiWi.github.io/2017/07/10/前端面试方法/"/>
+<link rel="canonical" href="https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/"/>
 
 
-<meta name="description" content="一面基本知识
-设计一个基本的组件，如 dialog，popup，modal。（提供什么接口，实现过程中需要注意哪些关键的问题，调用过程中可能会出现哪些边界情况？）
-框架类的题目，挑他最熟悉的框架，问一个稍微深入的问题，以检测是否深入学习框架，如果这个问题答不出，直接问其该框架有哪些深入研究过的点？
-
-项目相关
-做过最满意的项目是什么？
-你在其中担任什么角色？
-遇到的最困难的问题是什么以及是如何解决">
+<meta name="description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="前端面试方法">
-<meta property="og:url" content="https://ShiKaiWi.github.io/2017/07/10/前端面试方法/index.html">
+<meta property="og:title" content="CSS-Animation">
+<meta property="og:url" content="https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
-<meta property="og:description" content="一面基本知识
-设计一个基本的组件，如 dialog，popup，modal。（提供什么接口，实现过程中需要注意哪些关键的问题，调用过程中可能会出现哪些边界情况？）
-框架类的题目，挑他最熟悉的框架，问一个稍微深入的问题，以检测是否深入学习框架，如果这个问题答不出，直接问其该框架有哪些深入研究过的点？
-
-项目相关
-做过最满意的项目是什么？
-你在其中担任什么角色？
-遇到的最困难的问题是什么以及是如何解决">
-<meta property="og:updated_time" content="2017-07-09T23:49:35.000Z">
+<meta property="og:description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
+<meta property="og:updated_time" content="2017-07-27T00:14:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="前端面试方法">
-<meta name="twitter:description" content="一面基本知识
-设计一个基本的组件，如 dialog，popup，modal。（提供什么接口，实现过程中需要注意哪些关键的问题，调用过程中可能会出现哪些边界情况？）
-框架类的题目，挑他最熟悉的框架，问一个稍微深入的问题，以检测是否深入学习框架，如果这个问题答不出，直接问其该框架有哪些深入研究过的点？
-
-项目相关
-做过最满意的项目是什么？
-你在其中担任什么角色？
-遇到的最困难的问题是什么以及是如何解决">
+<meta name="twitter:title" content="CSS-Animation">
+<meta name="twitter:description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.2.x" />
@@ -101,7 +80,7 @@
 
 
 
-    <title> 前端面试方法 · ShiKaiWi's Homepage </title>
+    <title> CSS-Animation · ShiKaiWi's Homepage </title>
   </head>
 
   <body>
@@ -186,13 +165,13 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          前端面试方法
+          CSS-Animation
         
       </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          Jul 10, 2017
+          Jul 25, 2017
         </span>
       </div>
     </header>
@@ -202,25 +181,17 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一面"><span class="toc-text">一面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本知识"><span class="toc-text">基本知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目相关"><span class="toc-text">项目相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码测试"><span class="toc-text">代码测试</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#画尖角"><span class="toc-text">画尖角</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transition"><span class="toc-text">transition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transform"><span class="toc-text">transform</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animation"><span class="toc-text">animation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bezier-function"><span class="toc-text">bezier function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-kit-css-render-process"><span class="toc-text">web-kit css render process</span></a></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h2><h3 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h3><ol>
-<li>设计一个基本的组件，如 dialog，popup，modal。（提供什么接口，实现过程中需要注意哪些关键的问题，调用过程中可能会出现哪些边界情况？）</li>
-<li>框架类的题目，挑他最熟悉的框架，问一个稍微深入的问题，以检测是否深入学习框架，如果这个问题答不出，直接问其该框架有哪些深入研究过的点？</li>
-</ol>
-<h3 id="项目相关"><a href="#项目相关" class="headerlink" title="项目相关"></a>项目相关</h3><ol>
-<li>做过最满意的项目是什么？</li>
-<li>你在其中担任什么角色？</li>
-<li>遇到的最困难的问题是什么以及是如何解决的？</li>
-<li>可有哪些可以改善的地方？</li>
-</ol>
-<h3 id="代码测试"><a href="#代码测试" class="headerlink" title="代码测试"></a>代码测试</h3><p>目前使用 leetcode 上面 easy 难度的题，就是检测是否适合写代码，难度由简单开始，能做出第一题即可，然后如何可以引导其是否可以优化。</p>
-
+        <h2 id="画尖角"><a href="#画尖角" class="headerlink" title="画尖角"></a>画尖角</h2><p>#test-div {<br>    position: absolute;<br>    width: 14em;<br>    padding: .6em .8em;<br>    border-radius: .3em;<br>    margin: .3em 0 0 -.2em;<br>    background: #fed;<br>    border: 1px solid rgba(0,0,0,.3);<br>    box-shadow: .05em .2em .6em rgba(0,0,0,.2);<br>    font-size: 75%;<br>}</p>
+<p>#test-div:before {<br>    content: “”;<br>    position: absolute;<br>    top: calc(50%);<br>    left: 100%;<br>    padding: .35em;<br>    background: inherit;<br>    border: inherit;<br>    border-right: 0;<br>    border-bottom: 0;<br>    transform: translateY(-50%) translateX(-50%) rotate(135deg) ;<br>}</p>
+<h2 id="transition"><a href="#transition" class="headerlink" title="transition"></a>transition</h2><p>div {<br>    transition: <property> <duration> <timing-function> <delay>;<br>}</delay></timing-function></duration></property></p>
+<h2 id="transform"><a href="#transform" class="headerlink" title="transform"></a>transform</h2><h2 id="animation"><a href="#animation" class="headerlink" title="animation"></a>animation</h2><h2 id="bezier-function"><a href="#bezier-function" class="headerlink" title="bezier function"></a>bezier function</h2><h2 id="web-kit-css-render-process"><a href="#web-kit-css-render-process" class="headerlink" title="web-kit css render process"></a>web-kit css render process</h2>
       
     </div>
 
@@ -239,7 +210,7 @@
     </p>
     <p class="copyright-item">
       <span>链接: </span>
-      <a href="https://ShiKaiWi.github.io/2017/07/10/前端面试方法/">https://ShiKaiWi.github.io/2017/07/10/前端面试方法/</a>
+      <a href="https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/">https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/</a>
     </p>
 
     <p class="copyright-item lincese">
@@ -258,7 +229,7 @@
       <footer class="post-footer">
         <div class="post-tags">
           
-            <a href="/tags/面试/">面试</a>
+            <a href="/tags/css/">css</a>
           
         </div>
 
@@ -266,15 +237,9 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2017/07/25/CSS-Animation/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">CSS-Animation</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
     
-    
-      <a class="next" href="/2017/07/07/React-源码阅读-Component-Update/">
-        <span class="next-text nav-default">React-源码阅读-Component更新.md</span>
+      <a class="next" href="/2017/07/10/前端面试方法/">
+        <span class="next-text nav-default">前端面试方法</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
