@@ -34,16 +34,28 @@
 <link rel="canonical" href="https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/"/>
 
 
-<meta name="description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
+<meta name="description" content="transformtransform 是变换的基础，常用的操作主要有 scale，rotate，translate(translateX/Y)。在使用的时候会遇到以下几个注意点：
+
+scale 和 rotate 操作肯定是需要指定变换原点的，那么默认的原点是什么呢？答案是中心。
+那么根据 1，如果我们不想使用中心作为变换原点怎么办？答案是使用 transform-origin。
+还有一个 rota">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSS-Animation">
 <meta property="og:url" content="https://ShiKaiWi.github.io/2017/07/25/CSS-Animation/index.html">
 <meta property="og:site_name" content="ShiKaiWi's Homepage">
-<meta property="og:description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
-<meta property="og:updated_time" content="2017-07-27T16:05:16.000Z">
+<meta property="og:description" content="transformtransform 是变换的基础，常用的操作主要有 scale，rotate，translate(translateX/Y)。在使用的时候会遇到以下几个注意点：
+
+scale 和 rotate 操作肯定是需要指定变换原点的，那么默认的原点是什么呢？答案是中心。
+那么根据 1，如果我们不想使用中心作为变换原点怎么办？答案是使用 transform-origin。
+还有一个 rota">
+<meta property="og:updated_time" content="2017-07-30T08:06:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSS-Animation">
-<meta name="twitter:description" content="画尖角#test-div {    position: absolute;    width: 14em;    padding: .6em .8em;    border-radius: .3em;    margin: .3em 0 0 -.2em;    background: #fed;    border: 1px solid rgba(0,0,0,.3);    box-shadow:">
+<meta name="twitter:description" content="transformtransform 是变换的基础，常用的操作主要有 scale，rotate，translate(translateX/Y)。在使用的时候会遇到以下几个注意点：
+
+scale 和 rotate 操作肯定是需要指定变换原点的，那么默认的原点是什么呢？答案是中心。
+那么根据 1，如果我们不想使用中心作为变换原点怎么办？答案是使用 transform-origin。
+还有一个 rota">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.2.x" />
@@ -181,17 +193,24 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#画尖角"><span class="toc-text">画尖角</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transition"><span class="toc-text">transition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transform"><span class="toc-text">transform</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animation"><span class="toc-text">animation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bezier-function"><span class="toc-text">bezier function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-kit-css-render-process"><span class="toc-text">web-kit css render process</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#transform"><span class="toc-text">transform</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#transition"><span class="toc-text">transition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animation"><span class="toc-text">animation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bezier-function"><span class="toc-text">bezier function</span></a></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="画尖角"><a href="#画尖角" class="headerlink" title="画尖角"></a>画尖角</h2><p>#test-div {<br>    position: absolute;<br>    width: 14em;<br>    padding: .6em .8em;<br>    border-radius: .3em;<br>    margin: .3em 0 0 -.2em;<br>    background: #fed;<br>    border: 1px solid rgba(0,0,0,.3);<br>    box-shadow: .05em .2em .6em rgba(0,0,0,.2);<br>    font-size: 75%;<br>}</p>
-<p>#test-div:before {<br>    content: “”;<br>    position: absolute;<br>    top: calc(50%);<br>    left: 100%;<br>    padding: .35em;<br>    background: inherit;<br>    border: inherit;<br>    border-right: 0;<br>    border-bottom: 0;<br>    transform: translateY(-50%) translateX(-50%) rotate(135deg) ;<br>}</p>
-<h2 id="transition"><a href="#transition" class="headerlink" title="transition"></a>transition</h2><p>div {<br>    transition: <property> <duration> <timing-function> <delay>;<br>}</delay></timing-function></duration></property></p>
-<h2 id="transform"><a href="#transform" class="headerlink" title="transform"></a>transform</h2><h2 id="animation"><a href="#animation" class="headerlink" title="animation"></a>animation</h2><h2 id="bezier-function"><a href="#bezier-function" class="headerlink" title="bezier function"></a>bezier function</h2><h2 id="web-kit-css-render-process"><a href="#web-kit-css-render-process" class="headerlink" title="web-kit css render process"></a>web-kit css render process</h2><p>context tree<br>style struct</p>
+        <h2 id="transform"><a href="#transform" class="headerlink" title="transform"></a>transform</h2><p>transform 是变换的基础，常用的操作主要有 scale，rotate，translate(translateX/Y)。<br>在使用的时候会遇到以下几个注意点：</p>
+<ol>
+<li>scale 和 rotate 操作肯定是需要指定变换原点的，那么默认的原点是什么呢？答案是中心。</li>
+<li>那么根据 1，如果我们不想使用中心作为变换原点怎么办？答案是使用 transform-origin。</li>
+<li>还有一个 rotate，仅仅有一个转换原点还不够，还有旋转方向的设定，比如 rotate(45deg) 其实是指逆时针旋转 45 度。</li>
+<li>此外，translateY(-50%) 的 50% 是指元素本身的一半高度。</li>
+<li>其实要做二维变换可以是使用 matrix(a, b, c, d, tx, ty) 来做任意的转换</li>
+</ol>
+<h2 id="transition"><a href="#transition" class="headerlink" title="transition"></a>transition</h2><p>transition 其实就是一种简单的动画，和 animation 的区别只是在于没法将动画过程进行细分，只能对开始和最后的设定值进行动画设定，并且可以使用 timing-function 来控制动画的播放。<br>MDN 上的定义：transition: <property> <duration> <timing-function> <delay>;</delay></timing-function></duration></property></p>
+<h2 id="animation"><a href="#animation" class="headerlink" title="animation"></a>animation</h2><p>animation 必须配合 @keyframe 来使用，其实就是高级版的 transition。</p>
+<h2 id="bezier-function"><a href="#bezier-function" class="headerlink" title="bezier function"></a>bezier function</h2><p>由于 timing-function 比较容易使用的是 bezier function（贝塞尔函数），所以想要对它多了解一点。</p>
 
       
     </div>
@@ -237,6 +256,12 @@
         
         
   <nav class="post-nav">
+    
+      <a class="prev" href="/2017/07/30/CSS-Tricks-Record/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">CSS-Tricks-Record</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
     
     
       <a class="next" href="/2017/07/10/前端面试方法/">

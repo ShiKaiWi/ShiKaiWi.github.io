@@ -159,6 +159,149 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2017/04/03/ES6-异步编程/">ES6-异步编程</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Apr 3, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h2 id="异步编程"><a href="#异步编程" class="headerlink" title="异步编程"></a>异步编程</h2><p>异步编程是 Javascript 的一大特色，因为 Javascript 是单线程工作，因此如果没有异步方式的话，基本上用户体验将会是无法忍受的。</p>
+<p>因此 Javascript 的语法对异步的看重使得其对异步编程用了比较大的力气去优化，本文将会对直到 ES7 的异步编程方式进行总结：</p>
+<ol>
+<li>Callback</li>
+<li>Promise</li>
+<li>Generator</li>
+<li>asyn + await</li>
+</ol>
+<p>但是在阐述这些方式之前，有一个概念需要事先阐述的是 Javascript 的事件循环。</p>
+<h3 id="事件循环-event-loop"><a href="#事件循环-event-loop" class="headerlink" title="事件循环(event loop)"></a>事件循环(event loop)</h3><p>event loop 是 Javascript 作为单线程语言完成非阻塞处理的重要机制，但其本身很容易理解，就是 Javascript 解释器的实现中会维护一个队列，task queue，当在执行语句中出现异步函数（比如 setTimeout）的时候，这样的函数是不会立即执行的，而是会被挂起，当空闲的时候，Javascript 解释器会处理这个异步操作，当处理完毕后，会在 task queue 里面插入一个事件，这个事件一般绑定了定义好的 callback。</p>
+<p>下面是一个最简单的一个例子是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">setTimeout(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">'World'</span>), <span class="number">0</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hello'</span>)</div><div class="line"><span class="comment">// output: "Hello\nWorld"</span></div></pre></td></tr></table></figure>
+<p>结果是在意料之中的，这是因为当调用 setTimeout 函数时，你即使设置了 timeout 是 0ms，callback 函数的执行仍然会被放入 task queue 里，等到当前的 call stack 被清空后（这里停止的时机我还不是很清楚，可能是 call stack 清空，但也可能是其他判定条件，比如跑了指定长度的代码）再回来从 task queue 里面取出最新的 event 来处理，也就是执行回调。</p>
+<h3 id="异步编程方式"><a href="#异步编程方式" class="headerlink" title="异步编程方式"></a>异步编程方式</h3><p>有了 event loop 这个概念，那么对于操作异步函数就有帮助了，下面总结异步编程的方式，为了便于说明和调试，在需要使用异步函数的时候，本文都会使用 setTimeout 这个异步函数，其实本质上他和其他异步函数没什么区别，如果设置了 timeout 参数，就可看成其他异步函数的工作时间（这和 Java 中使用 Thread.sleep() 模拟线程运行是一个道理），下面会罗列目前 Javascript 的异步处理的几种常见的方式。</p>
+<p>由于 setTimeout 的书写方式和正常异步函数不一致，此外不想在每次写 setTimeout 的时候，总是设置 timeout，所以先将其包装一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> afunc = <span class="function">(<span class="params">callback</span>) =&gt;</span> setTimeout(callback,<span class="number">1000</span>)</div></pre></td></tr></table></figure>
+<p>此外，需要强调的是，这里所说的是异步编程方式，而不是异步函数，所谓异步编程方式（Asynchronized Programming)是指编写含有异步函数的代码的方式。</p>
+<h4 id="Callback"><a href="#Callback" class="headerlink" title="Callback"></a>Callback</h4><p>所谓的 Callback 是最原始的方式，也就说说直接将 callback 函数作为异步函数的参数传入，比如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">afunc(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"Hello"</span>);</div><div class="line">    afunc(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"World"</span>);</div><div class="line">        afunc(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"!"</span>));</div><div class="line">    &#125;)</div><div class="line">&#125;)</div><div class="line"><span class="comment">//output: Hello\nWorld\n!</span></div></pre></td></tr></table></figure></p>
+<p>当然如果写成原来的样子，应该是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"Hello"</span>);</div><div class="line">    setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"World"</span>);</div><div class="line">        setTimeout(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">'!'</span>),<span class="number">1000</span>);</div><div class="line">    &#125;,<span class="number">1000</span>)</div><div class="line">&#125;,<span class="number">1000</span>)</div></pre></td></tr></table></figure>
+<p>(之后就会直接使用 afunc)</p>
+<p>可以发现这样写不很方便，而且很丑，于是在 ES6 中 Promise 应运而生。</p>
+<h4 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h4><p>Promise 会提供刚好的异步编程体验，同样的例子可以这么写：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</div><div class="line">    afunc(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="built_in">console</span>.log(<span class="string">"Hello"</span>);resolve();&#125;)</div><div class="line">&#125;).then(<span class="function"><span class="params">()</span>=&gt;</span><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>)=&gt;</span>afunc(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="built_in">console</span>.log(<span class="string">"World"</span>);resolve()&#125;)))</div><div class="line">.then(<span class="function"><span class="params">()</span>=&gt;</span><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>)=&gt;</span>afunc(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="built_in">console</span>.log(<span class="string">"!"</span>);resolve()&#125;)))</div></pre></td></tr></table></figure></p>
+<p>这样就写成了链式的调用，但看上去非常繁琐，实际上我们可以将 afunc 封装一下：(为了不起冲突，命名成 afuncp)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> afuncp = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>)=&gt;</span>&#123;</div><div class="line">        setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</div><div class="line">            callback();resolve()</div><div class="line">            &#125;, <span class="number">1000</span>);</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// then the statement can be expressed as:</span></div><div class="line">afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"Hello"</span>))</div><div class="line">.then(<span class="function"><span class="params">()</span>=&gt;</span>afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"World"</span>)))</div><div class="line">.then(<span class="function"><span class="params">()</span>=&gt;</span>afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"!"</span>)))</div></pre></td></tr></table></figure></p>
+<p>是不是简洁多了？<br>这里的改写实际上和 fs 中的 readFile 和 fs-readfile-promise 类似。</p>
+<p>但即使如此，还有更方便的写法。</p>
+<h4 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h4><p>如果能把异步编程的方式写成同步形式，那岂不是更加美观？</p>
+<p>Generator 应运而生。</p>
+<p>如果使用 Generator 的话，上面的写法将会变成：（注意这里使用的是 afuncp 而不是 afunc，当然使用 afunc 也是可以的，但是在下面要使用 Promise 的特性时就行不通了）<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>* <span class="title">genHelloWorld</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">yield</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"Hello"</span>));</div><div class="line">    <span class="keyword">yield</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"World"</span>));</div><div class="line">    <span class="keyword">yield</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"!"</span>));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> g = genHelloWorld();</div><div class="line">g.next()</div><div class="line">g.next()</div><div class="line">g.next()</div></pre></td></tr></table></figure></p>
+<p>但是这么写却是不对的，（你可以发现三个字符串是同时出现的）为什么呢？因为虽然通过利用 Generator 执行到下一个 yield 会停止的特性来做到了，这样顺序执行了三个异步操作，但是和之前两个异步操作不一样，因为我们之前写的异步操作是有先后关系的，后一个异步操作必须是在前一个异步操作完成之后才能执行的。</p>
+<p>也就是说 Generator 其实本身不支持异步操作的依赖执行（就是前一个先执行了，才能执行下一个），但是具备记录上次执行位置和状态使得它有可能完成异步编程方式，而其所欠缺的只是一个使得依赖执行能够运作的机制（姑且成为依赖运行器）。</p>
+<p>下面我们就来实现这个机制，这个机制的关键地方在于控制依赖，以及自动运行：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">genController</span>(<span class="params">gen</span>)</span>&#123;</div><div class="line">    <span class="keyword">let</span> g = gen();</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">let</span> res = g.next();</div><div class="line">        <span class="keyword">if</span>(!res.done)&#123;</div><div class="line">            res.value.then(next);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    next();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// now let's run genHelloWorld</span></div><div class="line">genContorller(genHelloWorld);</div></pre></td></tr></table></figure></p>
+<p>如果想在 production 环境中使用这样的机制，可以考虑 co 这个模块。</p>
+<h4 id="async-await"><a href="#async-await" class="headerlink" title="async + await"></a>async + await</h4><p>通过上面的例子可以看出来，Generator 虽然在表达异步编程上非常具有优势，但是容易发现需要自己定义依赖运行器，于是 async 函数应运而生，其本质还是 Generator 但是却自带了依赖运行器。<br>下面试试，async 的写法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">genHelloWorld</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">await</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"Hello"</span>));</div><div class="line">    <span class="keyword">await</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"World"</span>));</div><div class="line">    <span class="keyword">await</span> afuncp(<span class="function"><span class="params">()</span>=&gt;</span><span class="built_in">console</span>.log(<span class="string">"!"</span>));</div><div class="line">&#125;</div><div class="line">genHelloWorld();</div></pre></td></tr></table></figure></p>
+<p>很完美！</p>
+<h4 id="Promise-的实现"><a href="#Promise-的实现" class="headerlink" title="Promise 的实现"></a>Promise 的实现</h4><p>之前有个工作上的前辈让我实现一个 Promise，叫我半个小时写出来一个有 resolve、then 功能的 Promise 类，结果我花了一晚上才实现出来。<br>代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PPromise</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(asyncF) &#123;</div><div class="line">        <span class="keyword">this</span>.cb = <span class="literal">null</span>; </div><div class="line">        <span class="keyword">this</span>.resolve = <span class="keyword">this</span>.resolve.bind(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">this</span>.then = <span class="keyword">this</span>.then.bind(<span class="keyword">this</span>);</div><div class="line">        <span class="comment">// convert resolve to async function calling</span></div><div class="line">        asyncF.apply(<span class="literal">null</span>, [<span class="function">(<span class="params">data</span>)=&gt;</span>setTimeout(<span class="function"><span class="params">()</span>=&gt;</span><span class="keyword">this</span>.resolve(data),<span class="number">0</span>)])</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    resolve(data) &#123;</div><div class="line">            <span class="keyword">var</span> cb = <span class="keyword">this</span>.cb;</div><div class="line">            <span class="keyword">if</span> (cb!==<span class="literal">null</span>)</div><div class="line">                cb.apply(<span class="literal">null</span>,[data]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    then(cb) &#123;</div><div class="line">        <span class="keyword">var</span> newPromise = <span class="keyword">new</span> PPromise(<span class="function"><span class="params">()</span>=&gt;</span><span class="literal">null</span>);</div><div class="line">        <span class="comment">// link the next promise in the cb</span></div><div class="line">        <span class="keyword">this</span>.cb = <span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</div><div class="line">            <span class="keyword">var</span> d = cb.apply(<span class="literal">null</span>,[data]) </div><div class="line">            newPromise.resolve(d); </div><div class="line">        &#125;   </div><div class="line">        <span class="keyword">return</span> newPromise;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实现的时候有两点需要注意的是：</p>
+<ol>
+<li>new Promise((resolve)=&gt;resolve(data)).then(console.log) 这个 resolve 调用是会被挂起的，这点也是这行代码 <code>asyncF.apply(null, [(data)=&gt;setTimeout(()=&gt;this.resolve(data),0)])</code> 的作用。</li>
+<li>then 返回的是一个什么？ 答案是还是一个 Promise，这里的实现是返回一个新的 Promise 然后在当前 Promise 的 callback 中调用新 Promise 的 resolve 方法。</li>
+</ol>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/03/05/Git-实践/">Git-实践</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Mar 5, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h3 id="1-git-merge-时发生了什么-如何处理？"><a href="#1-git-merge-时发生了什么-如何处理？" class="headerlink" title="1. git merge 时发生了什么? 如何处理？"></a>1. git merge 时发生了什么? 如何处理？</h3><p>发生 conflict 的情况有两种：一种是不同 branch 之间的 merge 时发生，还有一种是同一 branch 上由于同步开发，出现相同父节点上出现了两次不同的 commit（实际上只有本人和远程的差异，再具体点说就是合作者与自己拥有同一个父节点，并且在我提交下一个 commit 之前已经提交了一个 commit，这时候我发现无论我 pull 还是 push 都会出现 conflicts ）。</p>
+<p>对于这种情况，首先我想强调的是，不必紧张，git 是会保存所有的东西的，你们所有的更改都会保存下来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">A -----&gt; B1(sb else&apos;s commit) ---&gt; C</div><div class="line">|                                  | </div><div class="line">\                                  /</div><div class="line"> ------&gt; B2(your commit)----------</div></pre></td></tr></table></figure>
+<p>首先，你得了解你的 repo 处在什么状态——实际上是处于一个 merge 状态，这种状态你需要处理所有 unmerged file。</p>
+<p>然后，你有两个选择，手动消除 unmerged 的地方，然后使用 <code>git add &lt;file&gt;</code> 来表示 merge 完毕，之后就可以提交新的 commit（需要注意的是这时的 commit 是一个 merge 类型的结点，它有两个父节点，这点下面会因此而出现意外情况）。在提交新的 commit 之前，你还可以使用 <code>git merge --abort</code> 来取消这次 merge。</p>
+<p>但是如果出现这样的情况，merge 完毕后发现自己的 merge 做的有问题，不必担心，由上面的图可以知道，之前的冲突结点都保存着，那么该如何恢复呢？</p>
+<p>很简单，通过 revert 恢复是最安全的方式（注意，revert 和 reset 不一样，reset 是恢复到参数指定的 commit 的状态，而 revert 是回滚指定 commit 的状态到上一次 commit）</p>
+<p>但是如果你使用 <code>git revert &lt;B2&#39;s SHA&gt;</code> 会出 conflicts，这是因为你理解错了 revert 的含义（通过 git revert –abort 可以回滚）,而出现 conflicts 的原因是一般 revert 只会用作 <code>revert HEAD</code>，因此 git 知道回滚到当前 commit 的上一次 commit的方法，没有其他选择，若是回滚到指定版本的话，git 并不知道如何跨 commit 回滚，因此必须要人来手动 merge 一下。</p>
+<p>在这里的情况我们得使用 <code>git revert HEAD</code>，但是即使如此，仍然不对，而且是出错，这是因为，回滚 C 的时候，发现 C 有两个父节点，因此必须指定回滚到哪一个结点才行，那么如何知道相应父节点的编号呢？通过 <code>git log</code> 即可查看父节点的顺序，有了顺序使用 <code>git revert HEAD -m &lt;number&gt;</code> 来回滚到指定的父节点（注意编号从 1 开始）。</p>
+<h3 id="2-arc-如何结合-phabricator-使用？"><a href="#2-arc-如何结合-phabricator-使用？" class="headerlink" title="2. arc 如何结合 phabricator 使用？"></a>2. arc 如何结合 phabricator 使用？</h3><p>phabricator 是一种工程代码管理集成工具，arc 是进行 phabricator 上的 code review 的重要工具，那么如何使用 arc 呢？</p>
+<h4 id="安装-arc"><a href="#安装-arc" class="headerlink" title="安装 arc"></a>安装 arc</h4><p>参考 <a href="https://secure.phabricator.com/book/phabricator/article/arcanist_quick_start/" target="_blank" rel="external">这里</a></p>
+<h4 id="一次-feature-bug-的提交过程"><a href="#一次-feature-bug-的提交过程" class="headerlink" title="一次 feature/bug 的提交过程"></a>一次 feature/bug 的提交过程</h4><ol>
+<li><code>git pull</code> 保证 master 分支最新</li>
+<li><code>git checkout -b feature/xxx</code> 进行代码开发</li>
+<li><code>git add &lt;files needed to be committed&gt;; git commit -m &quot;...&quot;</code> commit 代码</li>
+<li><code>arc diff</code> 这个时候提交 diff，根据提示需要指定 diff 的 base，如果你只是 commit 过一次，那么一般使用 HEAD^ 作为 base（这也是默认选项）如果觉得不放心的话，最好使用 <code>arc diff --preiview</code> 来确认一下自己这次 diff 的提交是否出错</li>
+<li>代码 review 时出现需要改动的地方，那么改动代码后，使用 <code>git commit --amend</code> 来进行 commit，这样就会保证始终只有一次 commit，这样的话，就会方便每次 arc diff 的时候，不必指定 base</li>
+<li>review 通过以后 <code>arc land</code> 会将该分支 merge 到 master</li>
+</ol>
+<h4 id="如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突"><a href="#如果-land-diff-的时候发现-master-已经更新，并且-merge-有冲突" class="headerlink" title="如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突"></a>如果 land diff 的时候发现 master 已经更新，并且 merge 有冲突</h4><ol>
+<li>本地 merge 一次（解决冲突、add file、commit）</li>
+<li>再次更新 diff，将 base 设为最新的 master head，等待 review<br>更好的解决办法是：</li>
+<li><code>git checkout master</code></li>
+<li><code>git pull</code></li>
+<li><code>git checkout &lt;diff-branch&gt;</code></li>
+<li><code>git rebase master</code></li>
+<li>若是出现冲突，merge 完毕后，可以使用 <code>rebase --continue</code></li>
+<li><code>arc diff HEAD^</code></li>
+</ol>
+<h3 id="3-git-如何切换到任意结点下的某一个文件？"><a href="#3-git-如何切换到任意结点下的某一个文件？" class="headerlink" title="3. git 如何切换到任意结点下的某一个文件？"></a>3. git 如何切换到任意结点下的某一个文件？</h3><p><code>git checkout &lt;commit-hash&gt; path/to/file</code></p>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2017/02/27/React-Redux-入门坑总结/">React-Redux 入门坑总结</a>
         
       </h1>
@@ -344,7 +487,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2017/02/14/Hexo_With_GitHub/">Deploy Hexo Blogs on GitHub Pages</a>
+          <a class="post-link" href="/2017/02/14/Hexo-With-GitHub/">Deploy Hexo Blogs on GitHub Pages</a>
         
       </h1>
 
