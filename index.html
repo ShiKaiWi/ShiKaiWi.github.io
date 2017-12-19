@@ -204,115 +204,6 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2017/08/03/Cookies/">Cookies</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Aug 3, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="types"><a href="#types" class="headerlink" title="types"></a>types</h2><p>两种类型， session cookies 和 persistent cookie</p>
-
-        
-      
-    </div>
-
-    
-
-    
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/07/30/React-Redux-源码阅读/">React-Redux-源码阅读</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Jul 30, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          
-        
-      
-    </div>
-
-    
-
-    
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/07/30/WebBrowser-Parsing-Procedure/">WebBrowser-Parsing-Procedure</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          Jul 30, 2017
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          
-        
-      
-    </div>
-
-    
-
-    
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
           <a class="post-link" href="/2017/07/30/CSS-Tricks-Record/">CSS-Tricks-Record</a>
         
       </h1>
@@ -795,6 +686,166 @@
 <p>遵守这个 rule 的理由是，如果一个类具备了多个 responsibility，一方面这个类本身就会比较复杂，另一方面改动它的可能性也会很大，改动一个设计复杂的类，实在是很麻烦的一件事情。</p>
 <p>如何遵守这个 rule 呢？</p>
 <p>其实本质上就是分类的能力，将不属于此类的方法分离到其他类去实现。</p>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/05/21/值得记录的一些小问题/">值得记录的一些小问题</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          May 21, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>本篇 post，是为了记录一些工作学习中遇到的小问题，所谓小问题是指没有必要去深入系统的了解，但是如果不记录下来又会在之后忘记掉的问题。</p>
+<h1 id="ES6-循环-import"><a href="#ES6-循环-import" class="headerlink" title="ES6 循环 import"></a>ES6 循环 import</h1><p>ES6 中如果出现循环 import 是不会报错的，但是目前实际使用时我们使用的是 webpack 对其进行打包，因此其实是存在一些问题的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// a.js</span></div><div class="line"><span class="keyword">import</span> B <span class="keyword">from</span> <span class="string">'./b'</span>;</div><div class="line"><span class="built_in">console</span>.log(B);</div><div class="line"><span class="keyword">const</span> A = <span class="string">'A'</span>;</div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> A;</div><div class="line"></div><div class="line"><span class="comment">//b.js</span></div><div class="line"><span class="keyword">import</span> A <span class="keyword">from</span> <span class="string">'./a'</span>;</div><div class="line"><span class="built_in">console</span>.log(A);</div><div class="line"><span class="keyword">const</span> B = <span class="string">'B'</span>;</div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> B;</div><div class="line"></div><div class="line"><span class="comment">//main.js</span></div><div class="line"><span class="keyword">import</span> A <span class="keyword">from</span> <span class="string">'./a'</span>;</div><div class="line"><span class="keyword">import</span> B <span class="keyword">from</span> <span class="string">'./b'</span>;</div><div class="line"><span class="built_in">console</span>.log(A);</div><div class="line"><span class="built_in">console</span>.log(B);</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>这几个文件使用 webpack 打包后运行会导致输出结果是：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="literal">undefined</span></div><div class="line">B</div><div class="line">A</div><div class="line">B</div></pre></td></tr></table></figure></p>
+<p>这是因为 ES6 的 import 得到是一个 reference，而这个 reference 在使用的时候如果还没有被初始化，自然会是出现 undefined。</p>
+<p>这里的输出之所以会是这样，是因为 main.js 中先 import 了 A， 而在 a.js 中又会立即 import B，这样最先执行的一个 console.log 实际上是 b.js 中的 console.log(A)，而这时 A 又是没有初始化的，自然是 undefined。</p>
+<p>但是理论上讲这应该算是 webpack 的一个 bug，见这个 <a href="https://github.com/webpack/webpack/issues/1788" target="_blank" rel="external">link</a>。</p>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/05/21/可读性好的代码/">可读性好的代码</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          May 21, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>我本周最大的收获便是读完了 “the art of readable code”, 这本书由 Dustin Boswell，Travor Foucher 合作完成，主要讲述一些利于提升代码可读性的总结性技巧，看完收获颇多，写下这边 post 来总结一下自己所学到的东西。</p>
+<h1 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h1><p>1.命名要具体</p>
+<p>最常见的例子便是 get* 的使用，比如从服务器端拉取数据，很喜欢使用 get，但实际上并不是向 get 描述的那样，很简单就拉取到了，这里使用 fetch 是更好的选择。</p>
+<p>2.避免使用没意义的名字</p>
+<p>如 ret、result、tmp，除非这个变量只会出现在三行左右的地方</p>
+<p>3.添加更多信息到命名之中</p>
+<p>比如 size，size 时大小的含义，但是如果有单位区分的话，那么一个 size 很容易造成误解，可以加上 size_KB/size_kb</p>
+<p>4.属性、方法的命名传统（工作的时候遇到的）</p>
+<p>属性的话，一般是 名词／形容词<br>方法的命名一般是 动词词组</p>
+<p>5.避免使用含义不清晰的词</p>
+<p>比如 filter、limit， 当你需要使用 limit 的时候，使用 max、min 来代替更好，filter 的情况使用 select／remove 更好</p>
+<h1 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h1><p>1.comment 需要的判断法则</p>
+<blockquote>
+<p>Anticipate which parts of your code will make readers say “Huh?” and comment those.</p>
+</blockquote>
+<p>2.对代码进行高层次的介绍</p>
+<p>很多时候从代码整体的结构给出的注释很有价值</p>
+<p>3.使用 example 来 comment</p>
+<p>example 让人清晰明了</p>
+<h1 id="condition-statement"><a href="#condition-statement" class="headerlink" title="condition statement"></a>condition statement</h1><p>1.尽量减少 if 语句</p>
+<p>越少的 if 语句意味着代码可读性更好，代码更容易测试。</p>
+<p>2.先处理简单的条件</p>
+<p>先处理简单的条件会让人的思维更加清晰</p>
+<p>3.避免出现嵌套的 if 语句</p>
+<p>这样的代码看着就感觉很乱，如果能避免一定要避免</p>
+<h1 id="break-down-giant-code-block"><a href="#break-down-giant-code-block" class="headerlink" title="break down giant code block"></a>break down giant code block</h1><p>如果能讲一块集中的代码很好的抽象成 mehtod 自然是更好的</p>
+<h1 id="变量管理"><a href="#变量管理" class="headerlink" title="变量管理"></a>变量管理</h1><p>1.消除不必要的变量</p>
+<p>比如像是连续出现的两次相同的变量名，完全没必要出现</p>
+<p>2.缩小变量的 scope</p>
+<p>这一点会让代码可读性好上不少，基本上可以让读代码的人少了许多记忆的压力</p>
+<p>3.多使用 常量（只赋值一次的变量）</p>
+<p>如果一个变量的类型是常量，那么自然对于测试、读方便很多，尤其是和第二点结合起来</p>
+<h1 id="method／function"><a href="#method／function" class="headerlink" title="method／function"></a>method／function</h1><p>最重要的原则 one task at a time</p>
+<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><p>1.为 input output 写产生函数</p>
+<p>没有必要每次都手动生成 input、output</p>
+<p>2.减少对外部的依赖</p>
+<p>写测试最麻烦的地方在于被测试的模块对外部以来比较高，因此如果能减少外部的依赖，那么 test 的工作量将会减少</p>
+
+        
+      
+    </div>
+
+    
+
+    
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/04/23/痛苦的反思/">Move Fast</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Apr 23, 2017
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>我放弃读 PhD，孤身来到杭州，想要在自己喜欢的领域作出一番成就，成为这个领域的专家，我始终抱有这样的幻想：<br>我是很厉害的，我可以在我喜欢的事情上做得很顺利，我会理所当然地成为一个专家。</p>
+<p>然而事实却是：我和普通人一样。</p>
+<p>在我写下这篇随笔的时候，其实我在工作上很不顺利，并且我自己也选择了逃避，我每天害怕着站会，并且期待着下班，不再和之前一样，充满了热情，就连这个周末也是过得非常颓废。</p>
+<p>最终和往常一样，我的内疚感使我决定重新站立起来，我也真真切切地明白了这样的道理，没有人能够随随便便成功！如果这样想，我想自己也会变得更加坚强吧。</p>
+<p>我想自己接下来的两个月里，要努力地在前端这方面进行更深入地探索与练习，一定要多写代码。</p>
+<p>此外，我这周的工作让我发现自己的工作效率非常低下，我总结了一下原因：<br>写代码时会出现神思游离，导致出现很难发现的 bug（比如变量名写错了）<br>解决方案：<br>a. 模块化实现功能（在纸上列举出需要的步骤，一步步完成）<br>b. 在写代码的时候，一定要有意识地意识到自己在写不能出现低级错误、style 正确（使用各种 lint 工具）的code</p>
+<p>最近，一个前辈负责写数据逻辑部分的代码，我看到他的写法，第一次感觉自己是太渺小了，我觉得自己要变得更厉害，要比他还厉害。</p>
+<p>我现在的情况很是纠结，工作的事情多，自己又想看与语言无关的知识，同时又想看工作中使用的框架的源码。</p>
 
         
       
