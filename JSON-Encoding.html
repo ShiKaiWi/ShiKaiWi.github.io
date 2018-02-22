@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JSON-Encoding</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="created" content="2018-02-22T22:22:48+0800"/>
+        <meta name="modified" content="2018-02-22T22:24:04+0800"/>
+        <meta name="tags" content="web"/>
+        <meta name="last device" content="xwei's MBP"/>
+    </head>
+    <body>
+        <div class="note-wrapper">
+            <h1>JSON-Encoding</h1>
+<p><span class='hashtag'>#web</span></p>
+<hr>
+<p>title: JSON encoding</p>
+<p>date: 2017-12-17 23:42:44</p>
+<hr>
+<br>
+<h1>Problem</h1>
+<p>问题是这样的：</p>
+<p>用 golang 需要存储一段 json 数据到数据库，为此先将这段数据 base64 了一下然后再存储到数据库，之后取出之后直接返回给了前端，前端先用 atob 做 base64 解码，之后调用 JSON.parse 尝试将数据恢复成 json，对于 ASCII 字符来说这样并不会有什么问题，然而对于含有 unicode 字符的时候就出现了乱码。</p>
+<br>
+<p>此外，我同样用 python 将一段 json 数据变成 string，然后再使用 base64 encoding 存入数据，然而发现前端取这段数据又是正常的（即使其中含有中文）。</p>
+<br>
+<h1>Conclusion</h1>
+<p>因为自己的精力有限，我直接写出最终得到的结论：</p>
+<p>首先乱码的问题其实是 atob 这个 function 引起的，其实 base64 解码本身和 encoding 无关，然而 atob 这个 function 不仅做了 base64 decode 的工作，与此同时它还将 decode 结果转换成一个 javascript 的 string，然而你会发现这个字符串解析的过程其实是不识别 unicode 的，因此直接出现了乱码。</p>
+<br>
+<p>那为什么 python 的 base64 encoding 就没有问题呢？</p>
+<p>其实按照上面所述，出现乱码和 base64 根本毫无关系，golang 和 python 产生区别原因只是在于对于 unicode 的 string，golang 的 JSON.Marshal 默认用 UTF-8 编码存储，也就是说如果 JSON 数据如下：</p>
+<pre><code class='code-multiline'>{<span class="sf_code_syntax_keyword">name</span>: <span class="sf_code_syntax_string">"魏"</span>}</code></pre>
+<br>
+经过 golang 处理会得到如下的编码（ASCII 码用字符表示，其他用数据表示）：
+<pre><code class='code-multiline'><span class="sf_code_syntax_string">'{'</span> <span class="sf_code_syntax_string">'n'</span> <span class="sf_code_syntax_string">'a'</span> <span class="sf_code_syntax_string">'m'</span> <span class="sf_code_syntax_string">'e'</span> <span class="sf_code_syntax_string">':'</span> <span class="sf_code_syntax_string">'"' '</span><span class="sf_code_syntax_number">\x</span><span class="sf_code_syntax_string">e9' '</span><span class="sf_code_syntax_number">\x</span><span class="sf_code_syntax_string">ad' '</span><span class="sf_code_syntax_number">\x</span><span class="sf_code_syntax_string">8f' '"'</span> <span class="sf_code_syntax_string">'}'</span></code></pre>
+<br>
+这个是合法的 JSON 格式，这个对于 atob 也无法解析，因为 atob 不认识 UTF-8，而 python 却不是这样编码的：
+<pre><code class='code-multiline'>'{' 'n' 'a' 'm' 'e' ':' '"' '\' 'u' '9' 'B' '4' 'F' '"' '}'</code></pre>
+<br>
+这里注意 9B4F 是 '魏' 的 unicode point 参考这个 <a href="http://unicode.scarfboy.com/?s=%E9%AD%8F">link</a>，如果想知道为什么用 4 个十六进制的数据就可以表达一个 unicode，可以参考这个 <a href="https://en.wikipedia.org/wiki/Unicode#Code_point_planes_and_blocks">link</a>
+这个也是 JSON 的合法表达，可以参考这个 <a href="http://json.org/">link</a>， 并且因为也是因为这样编码不会存在任何非 ASCII 码，从而导致 atob 之后仍然可以被 JSON.parse 解析成正确的 javascript  string 对象。
+
+<h2>Solution</h2>
+解决方案用两种，封装一个 base64 decoding 的 function，可以在 atob 的基础上做一下 UTF-8 的支持，这段 function 可以从这个 <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding">link</a> 找到:
+<pre><code class='code-multiline'><span class="sf_code_syntax_project">function</span> <span class="sf_code_syntax_character">b64DecodeUnicode</span>(str) {
+    <span class="sf_code_syntax_comment">// Going backwards: from bytestream, to percent-encoding, to original string.
+</span>    <span class="sf_code_syntax_keyword">return</span> <span class="sf_code_syntax_keyword">decodeURIComponent</span>(<span class="sf_code_syntax_keyword">atob</span>(str).split(<span class="sf_code_syntax_string">''</span>).map(<span class="sf_code_syntax_project">function</span>(c) {
+        <span class="sf_code_syntax_keyword">return</span> <span class="sf_code_syntax_string">'%'</span> <span class="sf_code_syntax_keyword">+</span> (<span class="sf_code_syntax_string">'00'</span> <span class="sf_code_syntax_keyword">+</span> c.charCodeAt(<span class="sf_code_syntax_number">0</span>).toString(<span class="sf_code_syntax_number">16</span>)).slice(<span class="sf_code_syntax_keyword">-</span><span class="sf_code_syntax_number">2</span>);
+    }).join(<span class="sf_code_syntax_string">''</span>));
+}
+</code></pre>另一种解决方案就是在后端做 base64 的 decoding 工作。
+        </div>
+        <script type="text/javascript">
+            (function() {
+
+    var doc_ols = document.getElementsByTagName("ol");
+
+    for ( i=0; i<doc_ols.length; i++) {
+
+        var ol_start = doc_ols[i].getAttribute("start") - 1;
+        doc_ols[i].setAttribute("style", "counter-reset:ol " + ol_start + ";");
+
+    }
+
+})();
+        </script>
+        <style>
+            html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline}html{line-height:1}ol,ul{list-style:none}table{border-collapse:collapse;border-spacing:0}caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}q,blockquote{quotes:none}q:before,q:after,blockquote:before,blockquote:after{content:"";content:none}a img{border:none}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}html{font-size:87.5%;line-height:1.57143em}html{font-size:14px;line-height:1.6em;-webkit-text-size-adjust:100%}body{background:#fcfcfc;color:#545454;text-rendering:optimizeLegibility;font-family:"AvenirNext-Regular"}a{color:#de4c4f;text-decoration:none}h1{font-family:"AvenirNext-Medium";color:#333;font-size:1.6em;line-height:1.3em;margin-bottom:.78571em}h2{font-family:"AvenirNext-Medium";color:#333;font-size:1.3em;line-height:1em;margin-bottom:.62857em}h3{font-family:"AvenirNext-Medium";color:#333;font-size:1.15em;line-height:1em;margin-bottom:.47143em}p{margin-bottom:1.57143em;hyphens:auto}hr{height:1px;border:0;background-color:#dedede;margin:-1px auto 1.57143em auto}ul,ol{margin-bottom:.31429em}ul ul,ul ol,ol ul,ol ol{margin-bottom:0px}ol li:before{content:counter(ol) ".";counter-increment:ol;color:#e06e73;text-align:right;display:inline-block;min-width:1em;margin-right:0.5em}b,strong{font-family:"AvenirNext-Bold"}i,em{font-family:"AvenirNext-Italic"}code{font-family:"Menlo-Regular"}.text-overflow-ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sf_code_syntax_string{color:#D33905}.sf_code_syntax_comment{color:#838383}.sf_code_syntax_documentation_comment{color:#128901}.sf_code_syntax_number{color:#0E73A2}.sf_code_syntax_project{color:#5B2599}.sf_code_syntax_keyword{color:#0E73A2}.sf_code_syntax_character{color:#1B00CE}.sf_code_syntax_preprocessor{color:#920448}.note-wrapper{max-width:46em;margin:0px auto;padding:1.57143em 3.14286em}.note-wrapper.spotlight-preview{overflow-x:hidden}u{text-decoration:none;background-image:linear-gradient(to bottom, rgba(0,0,0,0) 50%,#e06e73 50%);background-repeat:repeat-x;background-size:2px 2px;background-position:0 1.05em}s{color:#878787}p{margin-bottom:0.1em}hr{margin-bottom:0.7em;margin-top:0.7em}ul li{text-indent:-0.35em}ul li:before{content:"•";color:#e06e73;display:inline-block;margin-right:0.3em}ul ul{margin-left:1.25714em}ol li{text-indent:-1.45em}ol ol{margin-left:1.25714em}blockquote{display:block;margin-left:-1em;padding-left:0.8em;border-left:0.2em solid #e06e73}.todo-list ul{margin-left:1.88571em}.todo-list li{text-indent:-1.75em}.todo-list li:before{content:"";display:static;margin-right:0px}.todo-checkbox{text-indent:-1.7em}.todo-checkbox svg{margin-right:0.3em;position:relative;top:0.2em}.todo-checkbox svg #check{display:none}.todo-checkbox.todo-checked #check{display:inline}.todo-checkbox.todo-checked .todo-text{text-decoration:line-through;color:#878787}.code-inline{display:inline;background:white;border:solid 1px #dedede;padding:0.2em 0.5em;font-size:0.9em}.code-multiline{display:block;background:white;border:solid 1px #dedede;padding:0.7em 1em;font-size:0.9em;overflow-x:auto}.hashtag{display:inline-block;color:white;background:#b8bfc2;padding:0.0em 0.5em;border-radius:1em;text-indent:0}.hashtag a{color:#fff}.address a{color:#545454;background-image:linear-gradient(to bottom, rgba(0,0,0,0) 50%,#0da35e 50%);background-repeat:repeat-x;background-size:2px 2px;background-position:0 1.05em}.address svg{position:relative;top:0.2em;display:inline-block;margin-right:0.2em}.color-preview{display:inline-block;width:1em;height:1em;border:solid 1px rgba(0,0,0,0.3);border-radius:50%;margin-right:0.1em;position:relative;top:0.2em;white-space:nowrap}.color-code{margin-right:0.2em;font-family:"Menlo-Regular";font-size:0.9em}.color-hash{opacity:0.4}.ordered-list-number{color:#e06e73;text-align:right;display:inline-block;min-width:1em}.arrow svg{position:relative;top:0.08em;display:inline-block;margin-right:0.15em;margin-left:0.15em}.arrow svg #rod{stroke:#545454}.arrow svg #point{fill:#545454}mark{color:inherit;display:inline-block;padding:0px 4px;background-color:#fcffc0}img{max-width:100%;height:auto}
+
+        </style>
+    </body>
+</html>
