@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="created" content="2018-02-22T22:11:23+0800"/>
-        <meta name="modified" content="2018-02-22T22:18:15+0800"/>
+        <meta name="modified" content="2018-02-22T22:20:16+0800"/>
         <meta name="tags" content=""/>
         <meta name="last device" content="xwei's MBP"/>
     </head>
@@ -234,21 +234,21 @@ fooEnvironment <span class="sf_code_syntax_keyword">=</span> {
 <h3>__proto__ 和 prototype 的区别</h3>
 <p>在阐述原型之前，必须先澄清这两个概念的区别，其实说穿了也很简单，一个 object 的原型实际上就是 __proto__，那么 prototype 又是什么呢？</p>
 <p>直接看如下一个例子：</p>
-<br>
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">function</span> <span class="sf_code_syntax_character">Constructor</span>() {
     <span class="sf_code_syntax_keyword">this</span>.x <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_number">3</span>;
 }
 <span class="sf_code_syntax_keyword">Constructor</span>.<span class="sf_code_syntax_keyword">prototype</span>. y <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_number">4</span>;
 <span class="sf_code_syntax_project">var</span> obj <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_keyword">new</span> <span class="sf_code_syntax_keyword">Constructor</span>();
 <span class="sf_code_syntax_keyword">console</span>.log(obj.__proto__ <span class="sf_code_syntax_keyword">===</span> <span class="sf_code_syntax_keyword">Constructor</span>.<span class="sf_code_syntax_keyword">prototype</span>) <span class="sf_code_syntax_comment">//true
-</span><span class="sf_code_syntax_keyword">console</span>.log(obj.x, obj.y) <span class="sf_code_syntax_comment">//3, 4
-</span></code></pre>看到这里你就知道了，当使用 <code class='code-inline'>new Cnostructor()</code> 来创建对象的话，那么 Constructor 的 prototype 便会是新创建对象的 __proto__。
-值得注意的是，上面这个例子中，x 和 y 的查询是不同的，x 属于 obj 自己的属性，而 y 是属于其原型的属性。
-
-因此一般说来，prototype 是 function 才有的属性，而所谓的原型编程实际上就是指使用 function 来进行 <u>_proto_</u> 的创建与传递。
-
-另外，这里给出 Object 和 Function 的 <u>_proto_</u> 和 prototype:（注意 Object 和 Function 都是 function 类型的）
-
+</span><span class="sf_code_syntax_keyword">console</span>.log(obj.x, obj.y) <span class="sf_code_syntax_comment">//3, 4</span></code></pre>
+<p><br></p>
+<p>看到这里你就知道了，当使用 <code class='code-inline'>new Cnostructor()</code> 来创建对象的话，那么 Constructor 的 prototype 便会是新创建对象的 __proto__。</p>
+<p>值得注意的是，上面这个例子中，x 和 y 的查询是不同的，x 属于 obj 自己的属性，而 y 是属于其原型的属性。</p>
+<br>
+<p>因此一般说来，prototype 是 function 才有的属性，而所谓的原型编程实际上就是指使用 function 来进行 <u>_proto_</u> 的创建与传递。</p>
+<br>
+<p>另外，这里给出 Object 和 Function 的 <u>_proto_</u> 和 prototype:（注意 Object 和 Function 都是 function 类型的）</p>
+<br>
 <pre><code class='code-multiline'>&gt; Function.__proto__
 [Function]
 &gt; Function.__proto__.__proto__
