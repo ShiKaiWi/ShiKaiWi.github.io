@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="created" content="2018-02-22T21:58:47+0800"/>
-        <meta name="modified" content="2018-02-22T21:59:59+0800"/>
+        <meta name="modified" content="2018-02-22T22:06:00+0800"/>
         <meta name="tags" content=""/>
         <meta name="last device" content="xwei's MBP"/>
     </head>
@@ -22,14 +22,15 @@
 <h2>0.隔离变化代码(Encapsulate varying code)</h2>
 <p>应该说这是设计模式的核心思想，所有的设计模式都是按照这个规则来提出的，因此这个规则也没有什么可以说的，只需要牢记在心。</p>
 <br>
-<h2>1.面向接口优于面向实现(Programming to Interface ranther Implements)</h2>
+<h2>1.面向接口优于面向实现(Programming to Interface rather Implements)</h2>
 <p>这是很重要的一点，在举例子之前首先需要知道这里 Interface 和 Implement 的意思，尤其是对 Java 的使用者来说，很容易产生混乱。</p>
 <br>
-<p>这里 Interface 更好的表述其实应该是 Supertype，所谓面向 Interface，其实应该说是面向 Supertype，而作为 Supertype，我们需要知道的是使用 Supertype 再配合 Polymophism，就可以使得代码的变化变少，因为 Supertype 类型的 variable 有着更强的代码兼容性（越抽象适用性更广泛）。</p>
+<p>这里 Interface 更好的表述其实应该是 Supertype，所谓面向 Interface，其实应该说是面向 Supertype，而作为 Supertype，我们需要知道的是使用 Supertype 再配合 Polymorphism，就可以使得代码的变化变少，因为 Supertype 类型的 variable 有着更强的代码兼容性（越抽象适用性更广泛）。</p>
 <br>
 <p>而所谓的 Implement 其实是相对于 Supertype 来说的，面向 Implement 编程实际上就是在编程中经常使用具体的类或类型来定义变量，从而导致代码发生变化的时候，改动会非常多。</p>
 <br>
 <p>下面举一个例子会更方便理解。</p>
+<br>
 <h3>问题描述：现在假设我们要设计一个游戏场景，场景中我们需要让一个狗发出声音，面对这个需求我们怎么实现会比较优雅？</h3>
 <p>一种快速的方法其实就是面向 Implement 的实现，首先实现一个 class 叫做 Dog:</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">class</span> <span class="sf_code_syntax_project">Dog</span> {
@@ -47,9 +48,10 @@
 <p><br></p>
 <p>然后在需要的地方，加上这段代码：</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">Dog</span> dog <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_keyword">new</span> <span class="sf_code_syntax_project">Dog</span>(<span class="sf_code_syntax_string">"Spot"</span>);
-dog<span class="sf_code_syntax_keyword">.</span>bark()
-</code></pre>看上去挺不错的，然后你要知道代码工程中，最常见的就是需求改变，比如，将这只狗变为猫？在这样的时候你该怎么办？
-你会说很简单啊，实现一个 Cat 的 class，实现 meow 方法，然后改代码：
+dog<span class="sf_code_syntax_keyword">.</span>bark()</code></pre>
+<p><br></p>
+<p>看上去挺不错的，然后你要知道代码工程中，最常见的就是需求改变，比如，将这只狗变为猫？在这样的时候你该怎么办？</p>
+<p>你会说很简单啊，实现一个 Cat 的 class，实现 meow 方法，然后改代码：</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_keyword">&lt;&lt;&lt;&lt;&lt;</span><span class="sf_code_syntax_project">HEAD</span>
 <span class="sf_code_syntax_project">Cat</span> cat <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_keyword">new</span> <span class="sf_code_syntax_project">Cat</span>(<span class="sf_code_syntax_string">"Mimi"</span>);
 cat<span class="sf_code_syntax_keyword">.</span>meow()
@@ -96,19 +98,20 @@ animal<span class="sf_code_syntax_keyword">.</span>makeSound()</code></pre>
 <span class="sf_code_syntax_keyword">=====</span>
 <span class="sf_code_syntax_project">Animal</span> animal <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_keyword">new</span> <span class="sf_code_syntax_project">Dog</span>(<span class="sf_code_syntax_string">"Sopt"</span>);
 <span class="sf_code_syntax_keyword">&gt;&gt;&gt;&gt;&gt;</span><span class="sf_code_syntax_project">Old</span>
-animal<span class="sf_code_syntax_keyword">.</span>makeSound
-</code></pre>这里也许有一点不好的事， animal 这个变量名太过抽象，代码的可读性不是很好，其实这里可以用具体的名字来代替，之后可以借助一些 Refactor 工具，可以瞬间改掉所有的名字，完全没有任何风险。
-
+animal<span class="sf_code_syntax_keyword">.</span>makeSound</code></pre>
+<p><br></p>
+<p>这里也许有一点不好的事， animal 这个变量名太过抽象，代码的可读性不是很好，其实这里可以用具体的名字来代替，之后可以借助一些 Refactor 工具，可以瞬间改掉所有的名字，完全没有任何风险。</p>
+<br>
 <h2>2.组合优于继承(Favor Composition over Inheritance)</h2>
-组合优于继承的原因其实是很容易理解的，一旦使用了继承那么你的方法都必须被实现，被实现就意味着代码无法动态变化，无法动态变化也就意味着复用率变低。
-
-而如果使用组合的话，我们便可以使用 Supertype 来持有某个类的 Instance，然后在需要变化的时候，可以将这个变量动态换成另外的 Instance 并且同时不对代码造成影响。
-
+<p>组合优于继承的原因其实是很容易理解的，一旦使用了继承那么你的方法都必须被实现，被实现就意味着代码无法动态变化，无法动态变化也就意味着复用率变低。</p>
+<br>
+<p>而如果使用组合的话，我们便可以使用 Supertype 来持有某个类的 Instance，然后在需要变化的时候，可以将这个变量动态换成另外的 Instance 并且同时不对代码造成影响。</p>
+<br>
 <h2>3.低耦合(Loose Coupling)</h2>
-不同对象之间的耦合度越低自然会带来越好的编程体验，不过在说它的好处之前有一点需要理清的是，什么样的耦合算低？
-
-我现在的看法是，两个对象之间对彼此的 Knowledge 知道的越少，耦合越低，那么什么是 Knowledge 呢？
-具体来说有两点：
+<p>不同对象之间的耦合度越低自然会带来越好的编程体验，不过在说它的好处之前有一点需要理清的是，什么样的耦合算低？</p>
+<br>
+<p>我现在的看法是，两个对象之间对彼此的 Knowledge 知道的越少，耦合越低，那么什么是 Knowledge 呢？</p>
+<p>具体来说有两点：</p>
 <ol start="1"><li>使用对方的 public method 的次数，使用的越少，耦合度就越低。（有待商榷）
 </li><li>一个类知道的其他 type 越少，耦合度就越低。
 </li></ol>
@@ -127,27 +130,25 @@ animal<span class="sf_code_syntax_keyword">.</span>makeSound
 <br>
 <ol start="1"><li>怎么在设计的时候，就避免之后的出现必要的改动？
 </li></ol>
-<br>
-<p>    这个问题我觉得自己暂时还讲不清楚，可能更多的是需要经验，然后总结出规律。</p>
-<br>
+<p>这个问题我觉得自己暂时还讲不清楚，可能更多的是需要经验，然后总结出规律。</p>
 <ol start="2"><li>怎么在使用拓展来代替修改？
 </li></ol>
+<p>这个可以借助一些设计模式，比如 Decorator。</p>
 <br>
-<p>    这个可以借助一些设计模式，比如 Decorator。</p>
-<br>
-<h2>5.依赖逆转(Dependency Invertion)</h2>
+<h2>5.依赖逆转(Dependency Inversion)</h2>
 <p>这是一个很重要的原则，在 Head 书中我个人觉得讲得不是很清楚。</p>
 <br>
 <p>在用具体的例子解释之前，名词的定义必须要理解，即什么是 Dependency？什么是 Invertion？</p>
+<br>
 <h3>Dependency</h3>
 <p>从字面上理解，就知道肯定存在多个事物，不妨就认为是两个类，Class A & B，那么我们都知道，如果在 A 中使用 B 的同时，又在 B 中使用 A，肯定是一种一般意义上不好的用法，因此不妨认为只会在 A 中使用 B。</p>
 <br>
 <p>如果我们需要在 A 中使用 B，那么实际上就是 A 需要让 B 来达到某种效果，而一般认为的做法实际上就是在实现 B 的时候，实现某些功能，然后我们在 A 中会根据 B 暴露的方法去使用，然后便可以通过这一系列的调用来解决问题，这个过程中 A 是 depend on B 的，得看 B 实现了什么功能，然后去调用它实现的功能。</p>
 <br>
-<p>这就是 Dependncy Invertion 中 Dependency 的含义。</p>
+<p>这就是 Dependency Inversion 中 Dependency 的含义。</p>
 <br>
-<h3>Invertion</h3>
-<p>说到这里你也许就知道了，Invertion 含义就是将上面的例子中 A depend on B，转化为 B depend on A。</p>
+<h3>Inversion</h3>
+<p>说到这里你也许就知道了，Inversion 含义就是将上面的例子中 A depend on B，转化为 B depend on A。</p>
 <br>
 <p>至于怎么 invert，以及为什么要 invert。我们直接通过一个例子来看。</p>
 <br>
@@ -186,7 +187,7 @@ animal<span class="sf_code_syntax_keyword">.</span>makeSound
 }
 </code></pre>上面的代码很简单，就不作解释了，从代码结构看来，明显是 PriceAvereger 依赖于 Commodity 的实现，最明显的一个缺点是 PriceAverager 不能给除了 Commodity 以外的类使用（比如有一个 Food 类，并且这个类和 Commodity 没有任何关系，那么即使给 Food 类添加 getPrice 方法也没有用）。
 
-因此我们需要 Dependency Invertion，那么怎么做？
+因此我们需要 Dependency Inversion，那么怎么做？
 提取一个接口：
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">Interface</span> <span class="sf_code_syntax_project">Priceable</span> {
     <span class="sf_code_syntax_project">float</span> getPrice();
