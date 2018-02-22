@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="created" content="2018-02-22T22:11:23+0800"/>
-        <meta name="modified" content="2018-02-22T22:14:31+0800"/>
+        <meta name="modified" content="2018-02-22T22:18:15+0800"/>
         <meta name="tags" content=""/>
         <meta name="last device" content="xwei's MBP"/>
     </head>
@@ -36,19 +36,20 @@
 <h2>变量管理</h2>
 <p>这里使用的变量管理并不是指硬件层面的实现，而是指 JavaScript 的变量存储的抽象模型。另外，在概念上，ES3 和 ES5 有着几个区别，因此会分别描述。</p>
 <br>
-<h3>ES3</h3>
-<h4>Execution Context(EC)</h4>
+<h2>ES3</h2>
+<h3>Execution Context(EC)</h3>
 <p>在 JavaScript 中有两种 EC：global context 和 function context。</p>
 <p>不同的 context 的管理是用 stack 模式管理的，举个例子，在 global context 下定义了一个 function func，那么整个 EC stack 就是：</p>
 <pre><code class='code-multiline'>EC Stack = {
     funcContext,
     globalContext,
-}
-</code></pre>如果从 funcContext 退出那么，EC Stack 将会只剩下 globalContext，符合 Stack 的管理方式。
-EC 有着许多重要的 property，用以在运行时使用，而在本篇 post 中，着重强调变量管理这一个问题，因此会探究其相关属性。
-
-<h4>Variable Object(VO) / Activation Object(AO)</h4>
-VO 和 AO 其实类似于符号表(symbol table)，用以集中管理变量，并且这是 EC 的属性，在 ES6 之前是没有 var 之外的变量定义方式的(有隐式定义变量，下面会提到)，而对 var 的处理会在静态分析进行，并且将定义的变量名填入 VO/AO，但是并不会直接对其赋值，而是等到执行到赋值语句的时候才会：
+}</code></pre>
+<p><br></p>
+<p>如果从 funcContext 退出那么，EC Stack 将会只剩下 globalContext，符合 Stack 的管理方式。</p>
+<p>EC 有着许多重要的 property，用以在运行时使用，而在本篇 post 中，着重强调变量管理这一个问题，因此会探究其相关属性。</p>
+<br>
+<h3>Variable Object(VO) / Activation Object(AO)</h3>
+<p>VO 和 AO 其实类似于符号表(symbol table)，用以集中管理变量，并且这是 EC 的属性，在 ES6 之前是没有 var 之外的变量定义方式的(有隐式定义变量，下面会提到)，而对 var 的处理会在<b>静态分析</b>进行，并且将定义的变量名填入 VO/AO，但是并不会直接对其赋值，而是等到执行到赋值语句的时候才会：</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_comment">// now VO = {
 //     a: undefined,
 // }
@@ -121,10 +122,10 @@ func();<span class="sf_code_syntax_comment">// output: 3</span></code></pre>
 <span class="sf_code_syntax_keyword">Object</span>.<span class="sf_code_syntax_keyword">prototype</span>.x <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_number">10</span>;
 foo(); <span class="sf_code_syntax_comment">// 10</span></code></pre>
 <p><br></p>
-<h4>属性访问</h4>
+<h3>属性访问</h3>
 <p>讲到这里，有了 EC、VO、SC，我们看似便可以对几乎所有的变量进行访问了，但是还有一种情况没有考虑，那就是 object 的属性访问，而在属性访问中，还有一个特别的例子，就是 this 的属性访问。</p>
 <br>
-<h5>Reference Type(RT)</h5>
+<h3>Reference Type(RT)</h3>
 <p>属性访问问题解决的本质其实在于如何定义这样的访问方法，而 JS 的做法是通过 RT 来解决，RT 的产生只在两者情况下：</p>
 <ol start="1"><li>处理变量名(identifier)[这里表明，普通变量的访问其实也是通过 RT 来解决的]
 </li><li>处理属性访问符(property accessor)
@@ -139,7 +140,7 @@ foo(); <span class="sf_code_syntax_comment">// 10</span></code></pre>
 <p><br></p>
 <p>当引用 foo 变量的时候，首先便会得到一个 fooReferenceType，然后每一个 RT 都有一个获取属性值的方法(GetValue)，这样就解决了属性访问的问题(其实说到可以发现，JS 里所有的变量访问都是属性访问，只不过没有指定 object 的地方基本上使用的 SC 上一层 VO/AO)。</p>
 <br>
-<h5>this 绑定</h5>
+<h3>this 绑定</h3>
 <p>this 的使用一般是如下情况：</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">function</span> <span class="sf_code_syntax_character">func</span>() {
     <span class="sf_code_syntax_keyword">console</span>.log(<span class="sf_code_syntax_keyword">this</span>.x);
@@ -190,7 +191,7 @@ foo(); <span class="sf_code_syntax_comment">// 1
 <p><br></p>
 <p>其实一般情况下，LE 只是 VE 的一个复制值，但是当出现例子这种情况的时候，必须在不破坏 VE 的情况下(因为 <code class='code-inline'>foo</code> 的调用需要用到 <code class='code-inline'>x = 1</code>)，同时提供另一套 <code class='code-inline'>{x: 2}</code> 会被先访问的 Environment(<code class='code-inline'>bar</code> 的调用要用到 <code class='code-inline'>x:2</code>)，于是会在进入 with block 的时候，保存好当前的 LE，同时改变 LE 为需要的 LE，在 with block 结束的时候恢复。</p>
 <br>
-<h3>Enviroment Record(ER)</h3>
+<h3>Environment Record(ER)</h3>
 <p>每一个 Environment 的结构会包含一个 ER 以及一个 outer，outer 其实就是上一层的 Environment，这点和 SC 很类似，不过是不完全一样的，下面的一个例子可以说明问题：</p>
 <pre><code class='code-multiline'><span class="sf_code_syntax_project">var</span> x <span class="sf_code_syntax_keyword">=</span> <span class="sf_code_syntax_number">1</span>;
 <span class="sf_code_syntax_project">function</span> <span class="sf_code_syntax_character">func</span>() {
