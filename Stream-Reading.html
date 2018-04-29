@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stream Reading</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="created" content="2018-04-27T10:26:34+0800"/>
+        <meta name="modified" content="2018-04-30T00:54:07+0800"/>
+        <meta name="tags" content="study, study/system-design"/>
+        <meta name="last device" content="xwei's MBP"/>
+    </head>
+    <body>
+        <div class="note-wrapper">
+            <h1>Stream Reading</h1>
+<p><span class='hashtag'>#study/system-design</span></p>
+<br>
+<h3>Abstract</h3>
+<ol start="1"><li>Stream reading 的重要性
+</li><li>Stream reading 的具体使用场景
+</li></ol>
+<br>
+<h3>Stream Reading 的重要性</h3>
+<p>Stream reading 的具体含义是流式地读取（处理）很大的数据，数据的来源可以是很多种形式：文件、网络数据、内存数据等。</p>
+<br>
+<p>先抛开 Stream，我们看一下 Reading，在 golang 中读取(Reading)这个行为被很好的抽象了出来：</p>
+<pre><code class='code-multiline'>type Reader interface {
+	Read([]byte) (int, error)
+}</code></pre>
+<p><br></p>
+<p>Reader 行为很简单，从源数据中读取相关的内容到 caller 提供的数组中，注意最终读取的长度不一定是数组的长度，返回的实际长度以第一个返回值给出。对于返回值的 error，需要特别注意 EOF 这个错误，因为当发生这个错误的时候，仍然有很大可能有不少数据还是读出来了，这部分数据也是需要处理的，因此 Reader 的使用方式一般会有这样的写法：</p>
+<pre><code class='code-multiline'>p := make([]byte, 32 * 1024)
+for {
+	n, err := reader.Read(p)
+  if err != nil && err != io.EOF {
+  		processError(err)
+      break
+   }
+  processData(p[0:n])
+  if err == io.EOF {
+  		break
+	}
+}</code></pre>
+<p><br></p>
+<p>Stream Reading 的重要性主要有两点：</p>
+<ol start="1"><li>源数据很大，无法全部读到内存中进行处理
+</li><li>对于处理好的结果可以先反馈给接收方，减小 latency
+</li></ol>
+<br>
+<p>对于第二点有一个重要的前提就是，处理的数据必须也是流式的，也就是说前面的数据不受后面的数据影响。</p>
+<br>
+<p>比如我需要处理一段文本数据，需要不断的解析文本中的数据（比如随着时间变化的某个量），format 之后传输给 web 端展示，那么如果数据量特别大的话（超过100MB），那么多几个请求，服务器可能就因为内存不足扛不住了。除此之外，如果是逐行处理的话，只要超过 10 MB，逐行处理就可能导致 web 端因为接口的结果迟迟不能返回，处于很长时间的 loading，严重影响用户体验。但是如果采用 stream reading 的方式做，我们只需要对于每一个请求维护一个较小的 buffer 即可（比如 32 KB），然后每次都处理这么 32KB 左右的数据，再将处理好的结果返回给 web 端，web 端的 latency 将只会有 32KB 的处理延迟，而不是之前几百兆的延迟。</p>
+<br>
+<h3>Stream Reading 的具体使用场景</h3>
+<p>写这篇文章的起因其实就是我工作中遇到的一个问题：</p>
+<p>Web 端需要提供某种文件的下载，但是文件中有一些敏感字符串，需要将这些敏感字符串所在的行去除掉之后，进行压缩然后传输给 web 端，整个 pipeline 如下：</p>
+<pre><code class='code-multiline'>读取文件 ——————&gt; 去除敏感行 ————————&gt; 压缩传输</code></pre>
+<br>
+最愚蠢的方式是，第一步把文件的内容全部读到内存中，第二步是内存中的字符串逐行进行处理，再将去除了敏感行的数据压缩完毕后，传输给 web 端下载。
+
+显然一点压缩传输是可以 stream 的，这一点也是我一开始的使用方式，但是没想到当文件超过 2 MB 之后，就会出现明显的 latency，其实是因为读取文件和去除敏感行，以及去除敏感行和压缩传输都是是分两步进行的，而这是可以进行流式处理的，我们只要将所有的全部串起来，将整个 pipeline 变得流水化，那么就达到了 Stream Reading 的效果了。
+
+以下我们可以来进行整个处理流程，笔者使用的环境是：
+<pre><code class='code-multiline'>1. macOS high sierra
+2. go 1.8.3 darwin/amd64</code></pre>
+<p><br></p>
+<h4>读取文件</h4>
+<pre><code class='code-multiline'>func fileReader(sFile string) (io.ReadCloser, error) {
+    f, err := os.Open(sFile)
+    if err != nil {
+        return nil, err
+    }
+    return f, nil
+}</code></pre>
+<p><br></p>
+<p>我们提供的生成一个 reader，接下来继续对这个 reader 进行封装，就可以逐步实现 stream reading（说到底 stream reading 必须基于 reader 的一层一层的封装，每次封装会加入新的逻辑，但是 Read 这一行为一直都是不变的，不变不仅包括方法签名不变，还包括每个参数的发生条件不变）。</p>
+<br>
+<h4>过滤敏感行</h4>
+<p>比起读取文件，去除敏感行的话，就比较麻烦了。</p>
+<br>
+<p>因为是笔者实际工程中遇到的问题，所以需要说的清楚一些：</p>
+<p>去除敏感行，意味着必须一行一行的去除，如果给出一块字符，就会出现最后结尾的一段不是完整的一行（这段数据没有以换行符结尾），对于这种 broken line 是无法判断其是否是敏感行的，所以我们在做 filter 的时候逐行处理到最后一行时直接不处理这一 broken line（如果没有遇到换行符），因此 filterFunc 这个函数的 signature 如下：</p>
+<pre><code class='code-multiline'>type filterFunc func([]byte)([]byte, []byte)</code></pre>
+<br>
+一共出现 3 个 []byte，含义分别作如下解释：
+<ol start="1"><li>source data：可能含有敏感行，并且最后一行可能是 broken line
+</li><li>broken line：我们选择直接返回给 caller 处理（一般是缓存下来）
+</li><li>filtered lines：被过滤过的安全的字符串
+</li></ol>
+<br>
+<p>具体的这个 filterFunc 实现在这篇博客中不是关键的东西，因此就省略了这个func 的实现。</p>
+<br>
+<p>下面直接给出 filterReader 的实现：</p>
+<pre><code class='code-multiline'>type filterReader struct {
+	buffer     []byte
+	rc         io.ReadCloser
+  filterF    filterFunc
+}
+
+func (r *filterReader) Read(p []byte) (readN int, err error) {
+	// the dropped bytes of last time will be saved into buffer
+	if len(r.buffer) &lt; len(p) {
+		bs := make([]byte, len(p)-len(r.buffer))
+		var n int
+		n, err = r.rc.Read(bs)
+		if err != nil && err != io.EOF {
+			return
+		}
+		r.buffer = append(r.buffer, bs[0:n]...)
+	}
+	dropBs, bs := r.filterF(r.buffer)
+	copy(p, bs)
+	r.buffer = dropBs
+	readN = len(s)
+	return
+}
+
+func (r *filterReader) Close() error {
+	return r.rc.Close()
+}</code></pre>
+<p><br></p>
+<p>这里最主要的实现就是 Read 函数，可以发现，filterReader 的多了一个 buffer 的 []byte，这个其实是用来存储上次的 broken line 的内容，我们将其存储下来用下一次的起始内容。</p>
+<br>
+<p>初看之下似乎没有什么问题，其实仔细看一下（笔者也是后来才发现其中的 bug），存在这样两个问题：</p>
+<ol start="1"><li>如果某次读之后，broken line 的剩余在 buffer 中的长度大于了下一次 Read p 的长度，那么下一次 Read 就不会有错，并且返回的是长度为 0
+</li><li>1 的情况的本质原因，如果存在一个 broken line 长度较长，正常使用的 p 的容量达不到 broken line，那么这个方法就会陷入死循环（因为一般来说 p 的长度在外界使用的时候也是一个常量，只要有一次触发这个问题，下面就是死循环）
+</li></ol>
+<br>
+<p>这个问题怎么解决就作为习题让读者自己思考吧。</p>
+<br>
+<p>我们再提供一个方法方便构造 FilterReader：</p>
+<pre><code class='code-multiline'>func newFilterReader(fReader io.ReadCloser, filterF filterFunc) (io.ReadCloser, error) {
+   return &filterReader{
+       rc: fReader,
+       filterF: filterFunc
+   }
+}</code></pre>
+<p><br></p>
+<h4>流式压缩</h4>
+<p>一般来说压缩的流程是这样的：</p>
+<pre><code class='code-multiline'>reader ————————&gt; compress module's writer
+</code></pre>所以有了 FilterReader 的接口，利用 io.Copy(writer, reader) 我们就很容易实现流式压缩了。
+
+        </div>
+        <script type="text/javascript">
+            (function() {
+
+    var doc_ols = document.getElementsByTagName("ol");
+
+    for ( i=0; i<doc_ols.length; i++) {
+
+        var ol_start = doc_ols[i].getAttribute("start") - 1;
+        doc_ols[i].setAttribute("style", "counter-reset:ol " + ol_start + ";");
+
+    }
+
+})();
+        </script>
+        <style>
+            html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline}html{line-height:1}ol,ul{list-style:none}table{border-collapse:collapse;border-spacing:0}caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}q,blockquote{quotes:none}q:before,q:after,blockquote:before,blockquote:after{content:"";content:none}a img{border:none}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}html{font-size:87.5%;line-height:1.57143em}html{font-size:14px;line-height:1.6em;-webkit-text-size-adjust:100%}body{background:#fcfcfc;color:#545454;text-rendering:optimizeLegibility;font-family:"AvenirNext-Regular"}a{color:#de4c4f;text-decoration:none}h1{font-family:"AvenirNext-Medium";color:#333;font-size:1.6em;line-height:1.3em;margin-bottom:.78571em}h2{font-family:"AvenirNext-Medium";color:#333;font-size:1.3em;line-height:1em;margin-bottom:.62857em}h3{font-family:"AvenirNext-Medium";color:#333;font-size:1.15em;line-height:1em;margin-bottom:.47143em}p{margin-bottom:1.57143em;hyphens:auto}hr{height:1px;border:0;background-color:#dedede;margin:-1px auto 1.57143em auto}ul,ol{margin-bottom:.31429em}ul ul,ul ol,ol ul,ol ol{margin-bottom:0px}ol li:before{content:counter(ol) ".";counter-increment:ol;color:#e06e73;text-align:right;display:inline-block;min-width:1em;margin-right:0.5em}b,strong{font-family:"AvenirNext-Bold"}i,em{font-family:"AvenirNext-Italic"}code{font-family:"Menlo-Regular"}.text-overflow-ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sf_code_syntax_string{color:#D33905}.sf_code_syntax_comment{color:#838383}.sf_code_syntax_documentation_comment{color:#128901}.sf_code_syntax_number{color:#0E73A2}.sf_code_syntax_project{color:#5B2599}.sf_code_syntax_keyword{color:#0E73A2}.sf_code_syntax_character{color:#1B00CE}.sf_code_syntax_preprocessor{color:#920448}.note-wrapper{max-width:46em;margin:0px auto;padding:1.57143em 3.14286em}.note-wrapper.spotlight-preview{overflow-x:hidden}u{text-decoration:none;background-image:linear-gradient(to bottom, rgba(0,0,0,0) 50%,#e06e73 50%);background-repeat:repeat-x;background-size:2px 2px;background-position:0 1.05em}s{color:#878787}p{margin-bottom:0.1em}hr{margin-bottom:0.7em;margin-top:0.7em}ul li{text-indent:-0.35em}ul li:before{content:"•";color:#e06e73;display:inline-block;margin-right:0.3em}ul ul{margin-left:1.25714em}ol li{text-indent:-1.45em}ol ol{margin-left:1.25714em}blockquote{display:block;margin-left:-1em;padding-left:0.8em;border-left:0.2em solid #e06e73}.todo-list ul{margin-left:1.88571em}.todo-list li{text-indent:-1.75em}.todo-list li:before{content:"";display:static;margin-right:0px}.todo-checkbox{text-indent:-1.7em}.todo-checkbox svg{margin-right:0.3em;position:relative;top:0.2em}.todo-checkbox svg #check{display:none}.todo-checkbox.todo-checked #check{display:inline}.todo-checkbox.todo-checked .todo-text{text-decoration:line-through;color:#878787}.code-inline{display:inline;background:white;border:solid 1px #dedede;padding:0.2em 0.5em;font-size:0.9em}.code-multiline{display:block;background:white;border:solid 1px #dedede;padding:0.7em 1em;font-size:0.9em;overflow-x:auto}.hashtag{display:inline-block;color:white;background:#b8bfc2;padding:0.0em 0.5em;border-radius:1em;text-indent:0}.hashtag a{color:#fff}.address a{color:#545454;background-image:linear-gradient(to bottom, rgba(0,0,0,0) 50%,#0da35e 50%);background-repeat:repeat-x;background-size:2px 2px;background-position:0 1.05em}.address svg{position:relative;top:0.2em;display:inline-block;margin-right:0.2em}.color-preview{display:inline-block;width:1em;height:1em;border:solid 1px rgba(0,0,0,0.3);border-radius:50%;margin-right:0.1em;position:relative;top:0.2em;white-space:nowrap}.color-code{margin-right:0.2em;font-family:"Menlo-Regular";font-size:0.9em}.color-hash{opacity:0.4}.ordered-list-number{color:#e06e73;text-align:right;display:inline-block;min-width:1em}.arrow svg{position:relative;top:0.08em;display:inline-block;margin-right:0.15em;margin-left:0.15em}.arrow svg #rod{stroke:#545454}.arrow svg #point{fill:#545454}mark{color:inherit;display:inline-block;padding:0px 4px;background-color:#fcffc0}img{max-width:100%;height:auto}
+
+        </style>
+    </body>
+</html>
