@@ -88,10 +88,10 @@ type filterFunc func([]byte)([]byte, []byte)
 下面直接给出 filterReader 的实现：
 ```go
 type filterReader struct {
-  // ll means last line
+	// ll means last line
 	ll	   	   []byte
 	rc         io.ReadCloser
-  filterF    filterFunc
+	filterF    filterFunc
 }
 
 func (r *filterReader) Read(p []byte) (readN int, err error) {
