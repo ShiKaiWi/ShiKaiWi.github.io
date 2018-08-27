@@ -21,7 +21,7 @@ Transaction 作为数据的一个重要特性给使用者提供了 ACID 四种�
 
 dirty reads:
 ```
-T1	                               |T2
+T1                               |T2
 Begin                            |
 Set X=3(initial value is 2)      |Begin
 Setting X                        |Get X
@@ -42,7 +42,7 @@ dirty writes，顾名思义其实就是指两个 transaction 在 commit 之前�
 最常见的情况就是对于多处内容的更改，可能会导致内容不 consistent，可以看下面一个例子，该例子使用了两个表，商品（goods）和账单（Invoices），两者的每行记录都会记录下商品 id 和 购买者：
 
 ```
-T1	                               |T2
+T1                               |T2
 Begin                            |-
 Set[Goods]id=1,buyer=Alice       |Begin
 Setting                          |Set[Goods]id=1,buyer=Bob
@@ -66,7 +66,7 @@ Snapshot isolation 又叫做 Repeatable Read， 意思是在一次 Transaction �
 
 `Read Skew` 的例子:
 ```
-T1	                               |T2
+T1                               |T2
 Begin                            |Begin
 Set X=3(initial value is 2)      |Finish Getting X=2
 Finish Setting & Commit          |Finish Getting X=3
@@ -83,7 +83,7 @@ Read Committed 和 Snapshot Isolation 两个 level 其实只是解决了 Read & 
 
 看以下的一个例子：
 ```
-T1	                               |T2
+T1                               |T2
 Begin                            |Begin
 Finish Getting B=200             |Finish Getting B=200
 Finish Setting B=B+100           |Finish Setting B=B+100
@@ -94,7 +94,7 @@ Commit                           |Commit
 
 除了 **Lost Update**，其实还有另外一种更普遍的情况（可以将 **Lost Update** 看成这种普遍情况的一种特例）：
 ```
-T1									|T2
+T1                               |T2
 Begin                            |Begin
 Finish Getting B=200             |Finish Getting B=200
 if B>=100: Set B=B-100           |if B>=100: Set B=B-100
