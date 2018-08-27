@@ -21,14 +21,14 @@ Transaction 作为数据的一个重要特性给使用者提供了 ACID 四种�
 
 dirty reads:
 ```
-T1									|T2
-Begin      						|
-Set X=3(initial value is 2)		|Begin
-Setting X							|Get X
-Finish Setting X					|Getting X
-Set Y=3							|Finish Getting X=3
+T1	                               |T2
+Begin                            |
+Set X=3(initial value is 2)      |Begin
+Setting X                        |Get X
+Finish Setting X                 |Getting X
+Set Y=3                          |Finish Getting X=3
 Fail to Set Y                    |
-Rollback						    |(now X should be 2)
+Rollback                         |(now X should be 2)
 ```
 
 本文采用了一些简写以方便举例以及排版，大概规则如下：
@@ -42,14 +42,14 @@ dirty writes，顾名思义其实就是指两个 transaction 在 commit 之前�
 最常见的情况就是对于多处内容的更改，可能会导致内容不 consistent，可以看下面一个例子，该例子使用了两个表，商品（goods）和账单（Invoices），两者的每行记录都会记录下商品 id 和 购买者：
 
 ```
-T1									|T2
-Begin								|-
-Set[Goods]id=1,buyer=Alice		|Begin
+T1	                               |T2
+Begin                            |-
+Set[Goods]id=1,buyer=Alice       |Begin
 Setting                          |Set[Goods]id=1,buyer=Bob
-Finish Setting					|Setting
-Set[Invoices]gID=1,buyer=Alice	|Finish Setting[Goods]
-Setting							|Set[Invoices]gID=1,buyer=Bob
-Finish Setting & Commit			|Setting
+Finish Setting                   |Setting
+Set[Invoices]gID=1,buyer=Alice   |Finish Setting[Goods]
+Setting                          |Set[Invoices]gID=1,buyer=Bob
+Finish Setting & Commit          |Setting
 ```
 
 在最后一刻我们可以发现 Goods 表里面的内容和 Invoices 表里面的内容不一致了：Goods 表里面 id=1 的商品的购买者是 Bob，但是 Invoices 表里面记录的 id=1 的购买者却是 Alice。
@@ -66,10 +66,10 @@ Snapshot isolation 又叫做 Repeatable Read， 意思是在一次 Transaction �
 
 `Read Skew` 的例子:
 ```
-T1									|T2
-Begin								|Begin
-Set X=3(initial value is 2)		|Finish Getting X=2
-Finish Setting & Commit			|Finish Getting X=3
+T1	                               |T2
+Begin                            |Begin
+Set X=3(initial value is 2)      |Finish Getting X=2
+Finish Setting & Commit          |Finish Getting X=3
 ```
 
 #### 如何解决的？
@@ -83,11 +83,11 @@ Read Committed 和 Snapshot Isolation 两个 level 其实只是解决了 Read & 
 
 看以下的一个例子：
 ```
-T1									|T2
-Begin								|Begin
-Finish Getting B=200				|Finish Getting B=200
-Finish Setting B=B+100			|Finish Setting B=B+100
-Commit							|Commit
+T1	                               |T2
+Begin                            |Begin
+Finish Getting B=200             |Finish Getting B=200
+Finish Setting B=B+100           |Finish Setting B=B+100
+Commit                           |Commit
 ```
 
 其中 B 是 Balance 的缩写，T1 和 T2 并发完成，可以看成转账操作，结果表明 T1 和 T2 完成之后，本来应该转入了一共 200，但是实际上只有 100，这种现象一般叫做 **Lost Update**。
@@ -95,11 +95,11 @@ Commit							|Commit
 除了 **Lost Update**，其实还有另外一种更普遍的情况（可以将 **Lost Update** 看成这种普遍情况的一种特例）：
 ```
 T1									|T2
-Begin								|Begin
-Finish Getting B=200				|Finish Getting B=200
-if B>=100: Set B=B-100			|if B>=100: Set B=B-100
-Finish Setting B=100				|Finish Setting B=100
-Commit							|Commit
+Begin                            |Begin
+Finish Getting B=200             |Finish Getting B=200
+if B>=100: Set B=B-100           |if B>=100: Set B=B-100
+Finish Setting B=100             |Finish Setting B=100
+Commit                           |Commit
 ```
 
 也许读者会觉得这里的这种情况和上一个例子没什么区别，但是笔者认为这里实际上是一个更普遍的例子：**Lost Update** 的根本原因是 Write 依赖于写之前的 Read，然而被依赖的 Read 可能会发生变化，从而导致依赖这个过时的 Read 值（称为 Phantom）的 Write 实际上是一次错误的 Write，也就是 **Write Skew**。
