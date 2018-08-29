@@ -10,26 +10,26 @@
 Stream Reading 的具体含义是流式（使用恒定内存）地读取（处理）很大的数据，而数据的来源可以是很多种形式：磁盘文件、网络包等。
 
 先抛开 Stream，我们看一下 Read 这一行为本身在 golang 中是如何定义的：
-```golang
+```go
 type Reader interface {
-	Read([]byte) (int, error)
+  Read([]byte) (int, error)
 }
 ```
 
 Reader 行为很简单：从源数据中读取相关的内容到 caller 提供的数组中。
 但是注意最终读取的长度不一定是数组的长度，返回的实际长度以第一个返回值给出。这里需要强调一下，对于返回值的 error，需要特别注意 `EOF` 这个错误，因为当发生这个错误的时候，仍然有可能会有部分数据还是读出来存储到了给定的 buffer 中，这部分数据也是需要 caller 自己去处理的，因此 Reader 的一般会有这样的写法：
-```golang
+```go
 p := make([]byte, 32 * 1024)
 for {
-	n, err := reader.Read(p)
+  n, err := reader.Read(p)
   if err != nil && err != io.EOF {
   	processError(err)
       break
-   }
+  }
   processData(p[:n])
   if err == io.EOF {
-  	break
-	}
+    break
+  }
 }
 ```
 
@@ -64,13 +64,13 @@ web 端需要提供某种文件的下载，但是文件中有一些敏感字符�
 ```
 
 #### 读取文件
-```golang
+```go
 func fileReader(sFile string) (io.ReadCloser, error) {
-    f, err := os.Open(sFile)
-    if err != nil {
-        return nil, err
-    }
-    return f, nil
+  f, err := os.Open(sFile)
+  if err != nil {
+    return nil, err
+  }
+  return f, nil
 }
 ```
 
@@ -80,7 +80,7 @@ func fileReader(sFile string) (io.ReadCloser, error) {
 比起读取文件，去除敏感行的话，就比较麻烦了。
 
 假设我们提供了一个 FilterFunc，其函数签名如下：
-```golang
+```go
 type FilterFunc func(string) bool
 ```
 
@@ -92,7 +92,7 @@ type FilterFunc func(string) bool
 去除敏感行，其实意味着是一行一行地去除，因此如果给出一块字符，就会出现这样的情况——最后结尾的一段不是完整的一行（这段数据没有以换行符结尾），笔者称之为 Broken Line。对于这种 Broken Line  我们是无法判断其是否为敏感行的，因此在做 filter 逐行处理到最后一行时，我们选择先不处理 Broken Line，而是将其缓存下来待到下一次处理的时候，这个缓存的 Broken Line 和之后的字符串拼接，从而形成完整的一行。
 
 下面给出 filterReader 的实现：
-```golang
+```go
 type lineFilterReader struct {
   // bl is the buffer line
   bl         string
@@ -151,23 +151,23 @@ func NewLineFilterReader(r io.Reader, filterLine FilterFunc) io.Reader {
 一般来说在 golang 中，可以将压缩可以抽象成一个 `pipe`， 输入是一个 `Writer`，输出是一个 `Reader`，所以有了 filterReader，利用 `io.Copy(writer, reader) `我们就非常容易地进行压缩的输入，然后再从 `pipe` 的 `Reader` 中不停地读取数据，提供给 web 端。
 
 代码如下：
-```golang
-	pr, pw := io.Pipe()
-	zipW := zip.NewWriter(pw)
-	zipF, _ := zipW.Create("123.txt")
-	go func() {
-		io.Copy(zipF, filterR)
-		zipW.Close()
-		pw.Close()
-	}()
+```go
+pr, pw := io.Pipe()
+zipW := zip.NewWriter(pw)
+zipF, _ := zipW.Create("123.txt")
+go func() {
+  io.Copy(zipF, filterR)
+  zipW.Close()
+  pw.Close()
+}()
 
-	// zipFile is used to simulate the receiver
-	// it may be a http body in prod
-	zipFileName := "stream_reading.zip"
-	zipFile, _ := os.Create(zipFileName)
-	defer os.Remove(zipFileName)
-	io.Copy(zipFile, pr)
-	zipFile.Close()
+// zipFile is used to simulate the receiver
+// it may be a http body in prod
+zipFileName := "stream_reading.zip"
+zipFile, _ := os.Create(zipFileName)
+defer os.Remove(zipFileName)
+io.Copy(zipFile, pr)
+zipFile.Close()
 ```
 
 这里的代码中有几点需要说明一下：
