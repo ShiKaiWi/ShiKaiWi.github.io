@@ -1,13 +1,13 @@
-# Isolation Level of DataBase Transaction
+# Weak-Isolation-Level-of-DataBase-Transaction
 ## 概要
 Transaction 作为数据的一个重要特性给使用者提供了 ACID 四种保证，本文将会对 I（Isolation）的不同 Level 进行一些入门式的讨论，对于每一个 Level 的 Isolation 主要讨论其概念，解决的问题以及解决的方法。
 
 ## Weak Isolation Levels
 其实为了达到 Isolation 的效果，最简单的方法就是单线程去处理所有的请求，也就是 Serializability，但是这样的话 performance 将会大幅度下降，所以几乎都不会这样处理，因为我们需要的是达到一定程度上 Serializable 的效果，而不是真的 Serializability。
 
-一般情况下越接近 Serializable，算法的设计会越来越复杂，性能也会越来越差，所以一般数据库都提供了不同 level 的 isolation，而 Weak Isolation Levels 就是一些没有达到 Serializability，但是却解决了一定程度上的并发问题的 isolation 模型。
+一般情况下越接近 Serializable，算法的设计会越来越复杂，性能也会越来越差，所以一般数据库除了提供最高等级的 Serializable 之外，都会提供其他不同 level 的 isolation，一般叫做 Weak Isolation Levels。
 
-本文不涉及如何达到 Serializable 的相关内容 ，但会依次介绍不同的 isolation level。
+Weak Isolation Levels 的 Isolation 虽然没有达到 Serializable，但是解决了一些问题，本文不涉及如何达到 Serializable 的相关内容 ，但会依次介绍不同的 isolation level。
 
 ### Read Committed
 #### 是什么意思？
@@ -20,37 +20,21 @@ Transaction 作为数据的一个重要特性给使用者提供了 ACID 四种�
 这个 level 主要处理了 dirty reads 和 dirty writes 两种情况，下面举例说明。
 
 dirty reads:
-```
-T1                               |T2
-Begin                            |
-Set X=3(initial value is 2)      |Begin
-Setting X                        |Get X
-Finish Setting X                 |Getting X
-Set Y=3                          |Finish Getting X=3
-Fail to Set Y                    |
-Rollback                         |(now X should be 2)
-```
+
+![dirty_read](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/dirty_read.svg)
+
 
 本文采用了一些简写以方便举例以及排版，大概规则如下：
 1. T+数字 是指 Transaction + 编号
-2. 一次操作包括开始，运行中，结束，比如 Set 操作：`Set`, `Setting`, `Finish Setting`，描述上允许用最后一步表示已经完成
-3. Begin Commit Rollback 的语义和 Transaction 相同
+2. 一次操作包括用一个矩形表示，矩形结束之后，代表操作完成
+3. Begin Commit Rollback 三种操作的语义和 Transaction 中的相同
 
 现在看第一个例子，其中的代码还是很容易理解的，T1 更新 X 的操作被 T2 中途感知，但是 T2 却又无法看到到 T1 因为无法设置 Y，直接 Rollback 了，X 的值实际上还是 initail value，而不是 3。
 
 dirty writes，顾名思义其实就是指两个 transaction 在 commit 之前就互相 overwrite 掉对方的值。
 最常见的情况就是对于多处内容的更改，可能会导致内容不 consistent，可以看下面一个例子，该例子使用了两个表，商品（goods）和账单（Invoices），两者的每行记录都会记录下商品 id 和 购买者：
 
-```
-T1                               |T2
-Begin                            |-
-Set[Goods]id=1,buyer=Alice       |Begin
-Setting                          |Set[Goods]id=1,buyer=Bob
-Finish Setting                   |Setting
-Set[Invoices]gID=1,buyer=Alice   |Finish Setting[Goods]
-Setting                          |Set[Invoices]gID=1,buyer=Bob
-Finish Setting & Commit          |Setting
-```
+![dirty_write](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/dirty_write.svg)
 
 在最后一刻我们可以发现 Goods 表里面的内容和 Invoices 表里面的内容不一致了：Goods 表里面 id=1 的商品的购买者是 Bob，但是 Invoices 表里面记录的 id=1 的购买者却是 Alice。
 
@@ -65,12 +49,8 @@ Snapshot isolation 又叫做 Repeatable Read， 意思是在一次 Transaction �
 如其概念所述，Read Committed 保证了不会看到没有 committed 的内容，但是即使保证了这一点仍然会出现 non-repeatable read 的问题，比如 T2 在 T1 没有结束之前读了一个值，T1 对这个值做出了修改，并且 commit 了，那么 T2 再读一遍这个值，就会发现和第一次读的值不一致，也就是所谓的 non-repeatable read 或者说 `Read skew`。
 
 `Read Skew` 的例子:
-```
-T1                               |T2
-Begin                            |Begin
-Set X=3(initial value is 2)      |Finish Getting X=2
-Finish Setting & Commit          |Finish Getting X=3
-```
+
+![read_skew](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/read_skew.svg)
 
 #### 如何解决的？
 解决方法其实是 Read Committed 的拓展，在 Read Committed 中针对读的优化是通过记录下相应 row 的 initial value 来保证其他 transaction 读的正确性，其实就是记录了两个版本的 row，放到 Snapchat 这里的话，仅仅只有两个 version 的值是不够的，因为需要考虑到每个 transaction 对要读和要修改的 row 的影响，顺理成章地也就形成了 MVCC（multi-version concurrent control）这一 Solution。
@@ -82,25 +62,14 @@ Finish Setting & Commit          |Finish Getting X=3
 Read Committed 和 Snapshot Isolation 两个 level 其实只是解决了 Read & Write 的 Concurrency 的问题，对于 Write & Write 的 Concurrency 的问题其实并没有解决。
 
 看以下的一个例子：
-```
-T1                               |T2
-Begin                            |Begin
-Finish Getting B=200             |Finish Getting B=200
-Finish Setting B=B+100           |Finish Setting B=B+100
-Commit                           |Commit
-```
 
-其中 B 是 Balance 的缩写，T1 和 T2 并发完成，可以看成转账操作，结果表明 T1 和 T2 完成之后，本来应该转入了一共 200，但是实际上只有 100，这种现象一般叫做 **Lost Update**。
+![lost_udpate](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/lost_update.svg)
+
+其中 T1 和 T2 并发完成，可以看成转账操作，结果表明 T1 和 T2 完成之后，本来应该转入了一共 200，但是实际上只有 100，这种现象一般叫做 **Lost Update**（注意我们已经假设已经是处于 snapchat level）。
 
 除了 **Lost Update**，其实还有另外一种更普遍的情况（可以将 **Lost Update** 看成这种普遍情况的一种特例）：
-```
-T1                               |T2
-Begin                            |Begin
-Finish Getting B=200             |Finish Getting B=200
-if B>=100: Set B=B-100           |if B>=100: Set B=B-100
-Finish Setting B=100             |Finish Setting B=100
-Commit                           |Commit
-```
+
+![write_skew](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/write_skew.svg)
 
 也许读者会觉得这里的这种情况和上一个例子没什么区别，但是笔者认为这里实际上是一个更普遍的例子：**Lost Update** 的根本原因是 Write 依赖于写之前的 Read，然而被依赖的 Read 可能会发生变化，从而导致依赖这个过时的 Read 值（称为 Phantom）的 Write 实际上是一次错误的 Write，也就是 **Write Skew**。
 
@@ -115,5 +84,4 @@ Update Balance SET B=B+100 WHERE id=xxx;
 ```
 
 ## Reference
-1. Designing Data-Intensive Applications by Martin Kleppmann
-
+[1] Designing Data-Intensive Applications by Martin Kleppmann
