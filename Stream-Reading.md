@@ -179,4 +179,4 @@ func NewLineFilterReader(r io.Reader, filterLine FilterFunc) io.Reader {
 读取文件 ——————> 去除敏感行 ————————> 压缩传输
 ```
 
-完整的 demo 代码可以看：[ShiKaiWi.github.io/stream_reading.go at master · ShiKaiWi/ShiKaiWi.github.io · GitHub](https://github.com/ShiKaiWi/ShiKaiWi.github.io/resources/stream-reading/stream_reading.go)
+完整的 demo 代码可以看：[ShiKaiWi.github.io/stream_reading.go at master · ShiKaiWi/ShiKaiWi.github.io · GitHub](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/stream-reading/stream_reading.go)
