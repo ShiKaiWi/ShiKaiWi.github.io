@@ -19,13 +19,13 @@ Add the `server` section  under the `http` section like this:
 ```
 server {
 	listen 443;
-  // the two server_names ensure the two names of our website are accessible both
+	// the two server_names ensure the two names of our website are accessible both
 	server_name togetherers.com, www.togetherers.com;
 	ssl on;
 	root <your-static-files-path>;
 	ssl_certificate  <your-certificate>;
 	ssl_certificate_key  <your-key>;
-  ssl_ciphers <your-ciphers>;
+	ssl_ciphers <your-ciphers>;
 	ssl_session_timeout 5m;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
@@ -62,10 +62,10 @@ server {
 	listen 443;
 	...
 	location /ws {
-    proxy_pass http://localhost:8081;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "Upgrade";
+		proxy_pass http://localhost:8081;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
 	}
 	...
 }
