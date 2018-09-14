@@ -96,14 +96,14 @@ func (m *Map) Store(key, value interface{}) {
 ```
 
 删除注释的话，整段 `Store` 的代码不长，整体思路就是：
-* 如果从 read map 中能够找到 normal entry 的话，那么就直接 update 这个 entry 就行（lock free）
-* 否则，就上锁，对 dirty 进行相关操作
+1. 如果从 read map 中能够找到 normal entry 的话，那么就直接 update 这个 entry 就行（lock free）
+2. 否则，就上锁，对 dirty map 进行相关操作
 
 代码中的 `tryStore` 会在 `entry` 是 `expunged` 的情况下失败，从而进入 slow path，也就是说进入上锁的流程。
 
-上锁之后，需要重新 check 一下 read map 中的内容（这一点是 lockless 里面的一种常见的 pattern），如果发现仍然是 `expunged` 的，那么会将 `expunged` 标记为 `nil`，并且在 dirty map 里面添加相应 key（这里其实就是将这个 entry 从一个 expunged 的 entry 变成了 normal entry）。
+上锁之后，需要重新 check 一下 read map 中的内容（这一点是 lockless 里面的一种常见的 pattern），如果发现仍然是 `expunged` 的，那么会将 `expunged` 标记为 `nil`，并且在 dirty map 里面添加相应 key（这里其实就是将这个 `entry` 从一个 `expunged` 的	`entry` 变成了 normal entry）。
 
-将 expunged 标记为 nil：
+将 `expunged` 标记为 nil：
 ```go
 func (e *entry) unexpungeLocked() (wasExpunged bool) {
 	return atomic.CompareAndSwapPointer(&e.p, expunged, nil)
