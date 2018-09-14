@@ -16,3 +16,5 @@
 
 ## My Friends
 [tao](http://tao93.top)
+[hamson](zxshamson.github.io)
+[ja1r0](https://ja1r0.github.io/)
