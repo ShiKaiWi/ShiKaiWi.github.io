@@ -315,5 +315,7 @@ func (e *entry) tryExpungeLocked() (isExpunged bool) {
 
 ## Reference
 [1] [go syncmap](https://github.com/golang/sync/blob/master/syncmap/map.go)
+
 [2] [go syncmap benchmark](https://medium.com/@deckarep/the-new-kid-in-town-gos-sync-map-de24a6bf7c2c)
+
 [3] [cmu lockfree tutoria](https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf)
