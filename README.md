@@ -13,3 +13,6 @@
 
 ## DataBase
 [Weak Isolation Level Of Database Transaction](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Weak-Isolation-Level-Of-Database-Transaction.md)
+
+## My Friends
+[tao](http://tao93.top)
