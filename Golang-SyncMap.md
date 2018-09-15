@@ -1,9 +1,9 @@
 # Golang SyncMap
 
 ## 概要
-golang 的 map 本身不是 thread-safe 的，但是通过使用读写锁，我们可以构造出一个 thread-safe 的 syncmap，不过这样写出的性能并不是不是很令人满意（[go-syncmap-benchmark](https://medium.com/@deckarep/the-new-kid-in-town-gos-sync-map-de24a6bf7c2c))，在某些场景（高并发+新增不频繁）下，我们需要更高效的 syncmap。
+golang 的 map 本身不是 thread-safe 的，但是通过使用读写锁，我们可以构造出一个 thread-safe 的 syncmap，不过这样的性能并不是很令人满意（[go-syncmap-benchmark](https://medium.com/@deckarep/the-new-kid-in-town-gos-sync-map-de24a6bf7c2c))，在某些场景（高并发+新增不频繁）下，我们需要更高效的 syncmap。
 
-因此 golang 官方提供了一个高效的 [syncmap](https://github.com/golang/sync/blob/master/syncmap/map.go)（下面 syncmap 就是指这一实现），本篇文章会分析其源码，看看 syncmap 是如何做到更高效的。
+因此 golang 官方提供了一个高效的 [syncmap](https://github.com/golang/sync/blob/master/syncmap/map.go)（下面 syncmap 就是指这一实现），本篇文章会分析其源码，看看该 syncmap 是如何做到更高效的。
 
 ## 直觉
 本篇文章的最主要的目的是探究出为什么 syncmap  能够提供高效的并发效率。在具体阐述之前，有一个直觉可以先建立起来——就是说用最简单的词来描述这个原因——**lock free**。
@@ -11,7 +11,7 @@ golang 的 map 本身不是 thread-safe 的，但是通过使用读写锁，我�
 ## 代码
 ### 数据结构
 因为想要借助 lock free 来提高访问效率，那么势必需要增加一些辅助的数据结构来支持 lock free 操作。
-在 syncmap 中实际存在两个 built-in 的 map：read  map & dirty map。
+在 syncmap 中实际存在两个 map：read  map & dirty map。
 可以看一下代码中的表示:
 ```go
 type Map struct {
