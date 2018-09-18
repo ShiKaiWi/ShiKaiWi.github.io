@@ -1,6 +1,6 @@
 # Go To HTTPS
 ## Problem
-Our website http://www.togetherers.com needs to be transformed into a https website to provide secure connection for audio/video communication. 
+Our website http://www.togetherers.com needs to be upgraded into a https website to provide secure connection for audio/video communication. 
 Before starting check what we have now:
 ```
 1. a ssl certificate and its corresponding key.
@@ -74,8 +74,8 @@ server {
 And one important tip is that the websocket client must connect to port 443 rather than 80 when trying to connect websocket server by ssl otherwise an `ERR_SSL_PROTOCOL_ERROR` will be thrown by the web client.
 
 ## DNS problem
-Actually https://togetherers.com cannot be accessible when all the configurations above are done. And the browser tells me an error —`DNS_PROBE_FINISHED_NXDOMAIN`.
+Actually `https://togetherers.com` cannot be accessible when all the configurations above are done. And the browser tells me an error —`DNS_PROBE_FINISHED_NXDOMAIN`.
 
-It is obvious that my DNS records miss something so that togetherers.com cannot be translated into ip. Then I figures out that the root cause of this problem is that  only an `A` type DNS record tells the translation from www.togetherers.com to my cloud host’s ip and no record for ip mapping of togetherers.com .
+It is obvious that my DNS records miss something so that `togetherers.com` cannot be translated into ip. Then I figures out that the root cause of this problem is that  only an `A` type DNS record tells the translation from `www.togetherers.com` to my cloud host’s ip and no record for `togetherers.com`.
 
-Finally the solution is easy — only a  `CNAME` record mapping togetherers.com to www.togetherers.com should be created.
+The solution is easy — only a  `CNAME` record mapping togetherers.com to `www.togetherers.com` need be created.
