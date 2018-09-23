@@ -1,6 +1,6 @@
 # TCP Time Wait State
 
-### 什么 Time Wait 状态？
+### 什么是 Time Wait 状态？
 `time wait` 是 tcp connection 的状态之一，进入这个状态的原因只有一种：主动关闭 connection （active close）。
 
 与其相对的是 `close wait` 状态，该状态是被动关闭 connection（passive close），也就是说接收到了对方的 `FIN` 信号（并且发出了自己的 `ACK` 信号）。
@@ -8,7 +8,7 @@
 在弄懂这个问题时，笔者遇到了这样一个的理解困难，必须理解了这一点，下面的表述才能真正命吧——就是当我们讨论 tcp connection 状态时，实际上讨论的是在某个 end point 上的该 tcp connection 的状态。
 
 ### 问题
-工作中需要写一个 tcp server，为了寻求快速开发，直接用了 python 来完成这一工作，开发完毕之后，遇到一个问题是因为需要每天重启这个 tcp server，然而每次重启的都会出错：
+工作中需要写一个 tcp server，为了寻求快速开发，直接用了 python 来完成这一工作，开发完毕之后，遇到一个问题：因为需要每天重启这个 tcp server，然而每次重启的都会出错，错误信息如下：
 ```
 socket.error: [Errno 48] Address already in use
 ```
@@ -138,4 +138,5 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 ### 参考
 [1] [RFC 793 - Transmission Control Protocol](https://tools.ietf.org/html/rfc793)
+
 [2] [time wait and its design implication](http://www.serverframework.com/asynchronousevents/2011/01/time-wait-and-its-design-implications-for-protocols-and-scalable-servers.html)
