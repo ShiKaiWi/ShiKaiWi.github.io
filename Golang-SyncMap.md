@@ -110,6 +110,13 @@ func (e *entry) unexpungeLocked() (wasExpunged bool) {
 }
 ```
 
+把这个新添加或者说是之前被删除的 value 设为传入的值:
+```go
+func (e *entry) storeLocked(i *interface{}) {
+	atomic.StorePointer(&e.p, unsafe.Pointer(i))
+}
+```
+
 如果发现这个 key 并不属于 read，但属于 dirty 的时候，直接更新相应的值即可。
 
 最后一种情况较为复杂，就是当这个 key 既不存在于 read map 中也不存在于 dirty map 中，在这种情况下，我们需要同时修改 read 和 dirty：
@@ -249,7 +256,7 @@ func (e *entry) delete() (hadValue bool) {
 
 这里有个问题是说，为什么将 `entry` 设置成 `nil` 而不是 `expunged`？
 
-从第一张图中的可以看出，同时存在于 read map 和 dirty map 中的 `entry` 是 `unexpunged` 的，而执行 CAS 成功的条件表明该 `entry` 既不是 `nil` 也不是 `expunged` 的，那么就是说这个 `entry` 必定是存在于 dirty  map 中的，也就不能置成 `expunged`。
+从第一张图中的可以看出，同时存在于 read map 和 dirty map 中的 `entry` 是 **un**`expunged` 的，所以我们使用 `nil` 来表示被删除。
 
 #### Load Store Delete
 `Load Store Delete`  的操作都基本描述完了，可以用下面的一张图用来总结一下：
@@ -309,7 +316,7 @@ func (e *entry) tryExpungeLocked() (isExpunged bool) {
 
 此外，还有一个细节问题，就是这里的最终返回结果是通过检查 p 是否是 `expunged` 的，但是理论上这样的读，在 lock free 下（比如 `Store` 里面的 fast path 可能是可以改变 p 的值的），是没有可信度的，但是代码中仍然相信这一点，这是为什么呢？
 
-这正是这一小节要提的，这是因为 `expunged` 在**无锁的情况下**是一个最终状态，就是在无锁的状态机中无法转移到其他状态的状态，也就是说一旦检测到一个 key 已经处于了 `expunged` 的状态的话，那么他就不可能**在无锁的情况下**再次成为其他状态了。这里之所以要强调无锁的情况下，是因为在有锁的情况下，`expunged` 的状态是可以变成 `nil` 的。
+这正是这一小节要提的，这是因为 `expunged` 在**无锁的情况下**是一个最终状态，就是在无锁的状态机中无法转移到其他状态的状态，也就是说一旦检测到一个 key 已经处于了 `expunged` 的状态的话，那么他就不可能**在无锁的情况下**再次成为其他状态了（这里之所以要强调无锁的情况下，是因为在有锁的情况下，`expunged` 的状态是可以变成 `nil` 的，而此处的代码是已经取得了 lock，因此可以视 `expunged` 是最终的状态）。
 
 此外能够将一个 key 设置成 `expunged` 的地方，也只有这里，换句话说如果这里不是 `expunged` 的话，那么在这次 lock 没有被释放之前，那么一定也不会成为 `expunged`，所以这里的可以相信 `expunged` 的检测。
 
