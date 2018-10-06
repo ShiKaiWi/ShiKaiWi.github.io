@@ -13,8 +13,7 @@
 ## 原理
 根据上面所述，Bloom Filter 的效果是提供一个 `IsIn` 方法，输入是一个 key，输出是一个 boolean，`false` 意味着不存在。
 
-Bloom Filter 不仅效果简单，其实原理也可以说是非常简单。
-实现一个 Bloom Filter，需要两个部分：
+Bloom Filter 不仅效果简单，其实原理也可以说是非常简单，实现一个 Bloom Filter，只需要两个部分：
 ```
 1. k 个 hash function：`hashFuncs`
 2. bit 长度为 m 的数组（初始值都是 bit 0）: `flags`
@@ -23,8 +22,8 @@ Bloom Filter 不仅效果简单，其实原理也可以说是非常简单。
 代码表示如下：
 ```go
 type BloomFilter struct {
-	hashFuncs 	[]func([]byte)uint
-  flags		[]bit
+	hashFuncs	[]func([]byte)uint
+	flags		[]bit
 }
 ```
 
@@ -64,7 +63,7 @@ func (f *BloomFilter) IsIn(key []byte) {
 ```
 
 ## 复杂度分析
-从直觉上讲，如果我们想要更准确地判断出不存在，或者说在给出`IsIn(key) == true`的时候使错误的概率（error rate of false positive）更小， flags 的长度越大越好， hash function 的数目越多越好，然而这里实际上又会要求更多的存储空间（一般都是内存来存储的），所以这里存在一个参数 tuning 的过程。
+从直觉上讲，如果我们想要更准确地判断出不存在，或者说在给出`IsIn(key) == true`的时候使错误的概率（error rate of false positive）更小， flags 的长度越大越好， hash function 的数目越多越好，然而这里实际上又会要求更多的存储空间（一般都是内存来存储的），所以这里存在一个参数 tuning `m & k` 的过程。
 
 而实际上，false positive 的概率不仅和 flags、hash functions 有关，实际上也和整个 key 的数目有关（比如 key 只有一个的话，那么判断就不会出错了）。
 
