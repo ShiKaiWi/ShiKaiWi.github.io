@@ -62,6 +62,15 @@ func (f *BloomFilter) IsIn(key []byte) {
 }
 ```
 
+### Remove
+从上面的描述可以看出，不同的 key 是可以占用相同的 bit 位置的，因此当我们试图删除某个 key 的时候，我们无法断定是否要 reset 该 key 对应的 bit 位（因为很有可能是其他 key 占用了即将要 reset 的 bit）。
+
+因此，一般来说，Bloom Filter 没有 remove 操作。
+
+但其实如果一定要支持 Remove 操作的话，我们可以将 flags 的元素类型扩展成一个 int 值（而不是一个 bit），用来记录该位置被不同的 key 引用的次数，因此在 remove 的时候，只是做自减的操作。
+
+这样做的坏处也是显而易见的，会占用大量内存：如果本来使用的是一个 bit，现在使用 uint32，那么占用的空间将会扩大到 32 倍。
+
 ## 复杂度分析
 从直觉上讲，如果我们想要更准确地判断出不存在，或者说在给出`IsIn(key) == true`的时候使错误的概率（error rate of false positive）更小， flags 的长度越大越好， hash function 的数目越多越好，然而这里实际上又会要求更多的存储空间（一般都是内存来存储的），所以这里存在一个参数 tuning `m & k` 的过程。
 
