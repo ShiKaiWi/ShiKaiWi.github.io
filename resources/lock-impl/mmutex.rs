@@ -27,6 +27,9 @@ impl MMutex {
 
     fn unlock(&mut self) {
         while self.guard.compare_and_swap(false, true, Ordering::Relaxed) == true {}
+        if !self.locked {
+            panic!("unlock an unlocked mutex");
+        }
         self.locked = false;
 
         // pop the first sleep thread from the queue and then wake it up
