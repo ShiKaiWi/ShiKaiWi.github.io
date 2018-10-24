@@ -19,7 +19,7 @@
 [Bloom Filter](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Bloom-Filter.md)
 
 ## OS
-[Lock Implementation](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Lock-Impl.md)
+[Mutex Implementation](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Mutex-Impl.md)
 
 ## My Friends
 [tao](http://tao93.top)

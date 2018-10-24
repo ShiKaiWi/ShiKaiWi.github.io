@@ -30,12 +30,13 @@ impl MMutex {
         if !self.locked {
             panic!("unlock an unlocked mutex");
         }
-        self.locked = false;
 
         // pop the first sleep thread from the queue and then wake it up
         if self.thds_queue.len() > 0 {
             let wait_thd = self.thds_queue.remove(0);
             wait_thd.unpark();
+        } else {
+            self.locked = false;
         }
 
         self.guard.store(false, Ordering::Relaxed);
