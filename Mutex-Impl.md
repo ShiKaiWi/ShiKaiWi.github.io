@@ -18,12 +18,12 @@ a = 12
 write-after-read 的原子性，是 lock-free 和 lock 的起点。
 
 ### 实现
-我用 rust 写了一份 `mutex` 的[实现](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/mutex-impl/mmutex.rs)，然而由于 rust 本身强大的静态检查，导致我根本无法测试我的 `mutex` 的正确性，所以下面的代码如果有一些遗漏和错误，还望读者指出。
+我用 rust 写了一份 `mutex` 的[实现](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/mutex-impl/mmutex.rs)，如果有一些遗漏和错误，还望读者指出。
 
 首先看一下 `mutex` 的 定义：
 ```rust
 #[derive(Debug)]
-struct MMutex {
+struct Imutex {
 	guard: AtomicBool,
 	locked: bool,
 	thds_queue: Vec<thread::Thread>,
@@ -35,23 +35,23 @@ struct MMutex {
 下面看一下 `lock` 方法：
 ```rust
 fn lock(&mut self) {
-	while self.guard.compare_and_swap(false, true, Ordering::Relaxed) == true {}
+	while self.guard.compare_and_swap(false, true, Ordering::Acquire) == true {}
 
 	if self.locked {
 		self.thds_queue.push(thread::current());
-		self.guard.store(false, Ordering::Relaxed);
+		self.guard.store(false, Ordering::Release);
 		// FIXME: data race here
 		thread::park();
 	} else {
 		self.locked = true;
-		self.guard.store(false, Ordering::Relaxed);
+		self.guard.store(false, Ordering::Release);
 	}
 }
 ```
 
 这里我们可以看到，`lock` 方法一进来，就是一个 while 循环，调用了 `guard.compare_and_swap(false, true, Ordering::Relaxed)` ，这里的含义其实就是如果原来的值是 `false`，则设置为 `true`，并且返回 `false`（old value），否则就不设置，返回 `true`，从而形成一个简单的自旋锁就完成了，一旦 while 循环终止了，那么任何其他使用了相同技巧的地方就无法进入关键区，也就达到了保护 `locked`和 `thds_queue` 这两个变量的效果。
 
-这里读者可能有一个疑问，就是 `Ordering::Relaxed` 这个参数是什么意思，对于写过 cpp 的读者来说可能不会陌生，但是对于只写过 golang 之类的读者来说，可能就比较陌生了，关于这个话题，笔者会在另外一篇文章中做更详细的阐述。
+这里读者可能有一个疑问，就是 `Ordering::Acquire` & `Ordering::Release` 这个参数是什么意思，对于写过 cpp 的读者来说可能不会陌生，但是对于只写过 golang 之类的读者来说，可能就比较陌生了，关于这个话题，笔者会在另外一篇文章中做更详细的阐述。
 
 拿到自旋锁之后，我们会检查 `locked`，如果已经被锁住了，则将当前线程加入到 `thds_queue` 中，以便后来唤醒。然后我们释放自旋锁，并且将当前线程设置为 blocked 状态，等待 resume。
 
@@ -62,7 +62,7 @@ fn lock(&mut self) {
 我们再看一下 `unlock` 的实现：
 ```rust
 fn unlock(&mut self) {
-	while self.guard.compare_and_swap(false, true, Ordering::Relaxed) == true {}
+	while self.guard.compare_and_swap(false, true, Ordering::Acquire) == true {}
 	if !self.locked {
 		panic!("unlock an unlocked mutex");
 	}
@@ -75,7 +75,7 @@ fn unlock(&mut self) {
 		self.locked = false;
 	}
 
-	self.guard.store(false, Ordering::Relaxed);
+	self.guard.store(false, Ordering::Release);
 }
 ```
 
@@ -85,7 +85,7 @@ fn unlock(&mut self) {
 
 最终释放自旋锁，完成 `unlock` 操作。
 
-虽然这里十分简陋，肯定不能当做生产环境中的 `mutex`，但是我想核心原理都差不多。不过可惜的是，rust 的静态检查比较强大，目前我还没发现如何使用上我的这个 `mutex` 来进行共享状态的多线程读写保护。
+虽然这里十分简陋，肯定不能当做生产环境中的 `mutex`，但是我想核心原理都差不多。另外由于 rust 存在多线程的 data race 的检查，因此源代码中为了“骗” compiler 还做了一些处理，不影响阅读。
 
 ### 问题
 其实这里有个非常严重的问题，代码中也加入了 comment：
