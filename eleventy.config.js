@@ -20,7 +20,7 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.addCollection("blog", (api) => {
-    const posts = api.getFilteredByGlob("posts/*.md").sort((a, b) => b.date - a.date);
+    const posts = api.getFilteredByGlob("./src/posts/*.md").sort((a, b) => b.date - a.date);
     for (const post of posts) {
       const raw = readFileSync(post.inputPath, "utf8");
       const missing = frontmatterHasRequiredFields(raw);

@@ -69,3 +69,26 @@ test("all nine posts build and resource images are local", () => {
     true
   );
 });
+
+test("homepage lists posts by month and exposes tags", () => {
+  const result = spawnSync("npx", ["eleventy"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  const html = readFileSync("_site/index.html", "utf8");
+  assert.match(html, /October 2018/);
+  assert.match(html, /September 2018/);
+  assert.match(html, /August 2018/);
+  assert.match(html, /data-tag="all"/);
+  assert.match(html, /data-tag="database"/);
+  assert.match(html, /data-tag="go"/);
+  assert.match(html, /data-tag="network"/);
+  assert.match(html, /data-tag="os"/);
+  assert.match(html, /data-tag="web"/);
+  assert.match(html, /Mutex Implementation/);
+  assert.match(html, /ES5 Inheritance/);
+  assert.match(html, /没有这个 tag 的文章/);
+  const oct = html.indexOf("October 2018");
+  const mutex = html.indexOf("Mutex Implementation");
+  const bloom = html.indexOf("Bloom Filter");
+  const sep = html.indexOf("September 2018");
+  assert.ok(oct < mutex && mutex < bloom && bloom < sep);
+});

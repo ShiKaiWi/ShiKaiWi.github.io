@@ -21,3 +21,12 @@ code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
 .tag { color: #7a7264; text-decoration: none; border-bottom: 1px solid #c8c0b2; margin-left: 0.6rem; }
 .body pre { background: #efe8dc; padding: 0.9rem 1rem; overflow-x: auto; }
 .body img { max-width: 100%; height: auto; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.9rem; border-bottom: 1px solid #d8d0c2; padding-bottom: 0.8rem; margin: 1.8rem 0 1.6rem; }
+.tags a { color: #7a7264; text-decoration: none; }
+.tags a.is-active { color: #2a2418; border-bottom: 1px solid #2a2418; }
+.month h2 { font-size: 0.85rem; color: #9a9284; font-weight: 500; margin: 1.4rem 0 0.4rem; }
+.entry { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; }
+.entry a { color: #2a2418; text-decoration: none; }
+.entry a:hover { border-bottom: 1px solid #2a2418; }
+.entry-tags { color: #9a9284; font-size: 0.85rem; }
+#empty-tags { color: #7a7264; }
