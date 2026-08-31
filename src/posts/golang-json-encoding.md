@@ -1,3 +1,10 @@
+---
+title: Golang JSON Encoding
+date: 2018-08-16
+tags:
+  - go
+layout: post.njk
+---
 # Golang-JSONEncoding
 
 ## Problem

@@ -1,3 +1,10 @@
+---
+title: Golang SyncMap
+date: 2018-09-14
+tags:
+  - go
+layout: post.njk
+---
 # Golang SyncMap
 
 ## 概要
@@ -49,7 +56,7 @@ type entry struct {
 这就要回到一开始提到的问题：
 > read map 和 dirty map 里面究竟存的是什么呢？  
 
-![](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/go-syncmap/read_dirty_map.svg)
+![](/resources/go-syncmap/read_dirty_map.svg)
 
 从上图中可以看出，read map 和 dirty map 中含有相同的一部分 `entry`，我们称作是 normal entries，是双方共享的，并且满足：其中的 `entry.p` 只会是两种状态，
 * `nil`
@@ -260,7 +267,7 @@ func (e *entry) delete() (hadValue bool) {
 
 #### Load Store Delete
 `Load Store Delete`  的操作都基本描述完了，可以用下面的一张图用来总结一下：
-![](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/go-syncmap/load_store.svg)
+![](/resources/go-syncmap/load_store.svg)
 
 
 ### read map 和 dirty map 的设计分析

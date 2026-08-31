@@ -1,3 +1,10 @@
+---
+title: ES5 Inheritance
+date: 2018-08-15
+tags:
+  - web
+layout: post.njk
+---
 # ES5 实现继承
 ### `__proto__` 和 `prototype` 的区别
 在阐述原型之前，必须先澄清这两个概念的区别，其实说穿了也很简单，一个 object 的原型实际上就是 `__proto__`，那么 `prototype` 又是什么呢？

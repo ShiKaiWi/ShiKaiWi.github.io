@@ -1,3 +1,11 @@
+---
+title: Go To HTTPS
+date: 2018-09-10
+tags:
+  - web
+  - network
+layout: post.njk
+---
 # Go To HTTPS
 ## Problem
 Our website http://www.togetherers.com needs to be upgraded into a https website to provide secure connection for audio/video communication. 

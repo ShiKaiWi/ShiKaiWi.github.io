@@ -1,3 +1,10 @@
+---
+title: TCP Time Wait State
+date: 2018-09-23
+tags:
+  - network
+layout: post.njk
+---
 # TCP Time Wait State
 
 ### 什么是 Time Wait 状态？
@@ -16,7 +23,7 @@ socket.error: [Errno 48] Address already in use
 ### 复现
 为了解决这个问题，我写了一个简单的 tcp echo server/client，以此来重现我的问题：
 
-[server 代码](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/tcp-time-wait-state/tcp-server.py)
+[server 代码](/resources/tcp-time-wait-state/tcp-server.py)
 ```python
 # server
 #!/usr/bin/env python
@@ -56,7 +63,7 @@ if __name__ == "__main__":
     run()
 ```
 
-[client 代码](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/tcp-time-wait-state/tcp-client.py)
+[client 代码](/resources/tcp-time-wait-state/tcp-client.py)
 ```python
 import socket
 
@@ -97,7 +104,7 @@ socket.error: [Errno 48] Address already in use
 
 解决方法很简单，下面主要解释其中的原因。
 
-![](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/tcp-time-wait-state/tcp-state-diagram.png)
+![](/resources/tcp-time-wait-state/tcp-state-diagram.png)
 来自 [RFC 793 - Transmission Control Protocol](https://tools.ietf.org/html/rfc793)
 
 让我们回到 client 接收到 echo 之后，立即停止运行的时候。在这之前，我们的 echo server 已经主动 close 了这个 tcp connection 了，而到了此刻，client 也发出了 close tcp connection 的 FIN 包。如果 server 端已经接收到了来自 client 端的 FIN 包，根据 tcp connection state diagram，我们可以发现 server 端会发出相应的 ACK 包，并且进入 `time wait` 状态。

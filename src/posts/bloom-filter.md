@@ -1,3 +1,10 @@
+---
+title: Bloom Filter
+date: 2018-10-06
+tags:
+  - database
+layout: post.njk
+---
 # Bloom Filter
 ## 背景
 在研究 leveldb 源码的时候，发现有这样一个 `FilterPolicy` 的实现——`BloomFilter`。
@@ -77,7 +84,7 @@ func (f *BloomFilter) IsIn(key []byte) {
 而实际上，false positive 的概率不仅和 flags、hash functions 有关，实际上也和整个 key 的数目有关（比如 key 只有一个的话，那么判断就不会出错了）。
 
 最终 false positive 的 error rate `p`，是存在这样一个公式的：
-![](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/Bloom-Filter/false-positive-error-rate.png)
+![](/resources/Bloom-Filter/false-positive-error-rate.png)
 
 根据这个公式我们可以很方便的完成 tuning `m & k` 的工作。
 

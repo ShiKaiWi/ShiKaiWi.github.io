@@ -39,3 +39,33 @@ test("mutex article page renders title, date, tag, and body", () => {
   assert.match(html, /all posts/);
   assert.match(html, /mutex/);
 });
+
+const SLUGS = [
+  "mutex-impl",
+  "bloom-filter",
+  "tcp-time-wait-state",
+  "golang-syncmap",
+  "go-to-https",
+  "weak-isolation-level-of-database-transaction",
+  "stream-reading",
+  "golang-json-encoding",
+  "es5-inheritance",
+];
+
+test("all nine posts build and resource images are local", () => {
+  const result = spawnSync("npx", ["eleventy"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  for (const slug of SLUGS) {
+    const html = readFileSync(`_site/posts/${slug}/index.html`, "utf8");
+    assert.doesNotMatch(html, /github\.com\/ShiKaiWi\/ShiKaiWi\.github\.io\/blob\/master\/resources/);
+  }
+  const syncmap = readFileSync("_site/posts/golang-syncmap/index.html", "utf8");
+  assert.match(syncmap, /src="\/resources\/go-syncmap\/read_dirty_map\.svg"/);
+  assert.equal(existsSync("_site/resources/go-syncmap/read_dirty_map.svg"), true);
+  assert.equal(existsSync("_site/resources/Bloom-Filter/false-positive-error-rate.png"), true);
+  assert.equal(existsSync("_site/resources/tcp-time-wait-state/tcp-state-diagram.png"), true);
+  assert.equal(
+    existsSync("_site/resources/isolation-level-of-database-transaction/write_skew.svg"),
+    true
+  );
+});

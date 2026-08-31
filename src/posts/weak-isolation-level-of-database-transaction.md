@@ -1,3 +1,10 @@
+---
+title: Weak Isolation Level of Database Transaction
+date: 2018-08-27
+tags:
+  - database
+layout: post.njk
+---
 # Weak-Isolation-Level-of-DataBase-Transaction
 ## 概要
 Transaction 作为数据的一个重要特性给使用者提供了 ACID 四种保证，本文将会对 I（Isolation）的不同 Level 进行一些入门式的讨论，对于每一个 Level 的 Isolation 主要讨论其概念，解决的问题以及解决的方法。
@@ -21,7 +28,7 @@ Weak Isolation Levels 的 Isolation 虽然没有达到 Serializable，但是解�
 
 dirty reads:
 
-![dirty_read](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/dirty_read.svg)
+![dirty_read](/resources/isolation-level-of-database-transaction/dirty_read.svg)
 
 
 本文采用了一些简写以方便举例以及排版，大概规则如下：
@@ -34,7 +41,7 @@ dirty reads:
 dirty writes，顾名思义其实就是指两个 transaction 在 commit 之前就互相 overwrite 掉对方的值。
 最常见的情况就是对于多处内容的更改，可能会导致内容不 consistent，可以看下面一个例子，该例子使用了两个表，商品（goods）和账单（Invoices），两者的每行记录都会记录下商品 id 和 购买者：
 
-![dirty_write](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/dirty_write.svg)
+![dirty_write](/resources/isolation-level-of-database-transaction/dirty_write.svg)
 
 在最后一刻我们可以发现 Goods 表里面的内容和 Invoices 表里面的内容不一致了：Goods 表里面 id=1 的商品的购买者是 Bob，但是 Invoices 表里面记录的 id=1 的购买者却是 Alice。
 
@@ -50,7 +57,7 @@ Snapshot isolation 又叫做 Repeatable Read， 意思是在一次 Transaction �
 
 `Read Skew` 的例子:
 
-![read_skew](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/read_skew.svg)
+![read_skew](/resources/isolation-level-of-database-transaction/read_skew.svg)
 
 #### 如何解决的？
 解决方法其实是 Read Committed 的拓展，在 Read Committed 中针对读的优化是通过记录下相应 row 的 initial value 来保证其他 transaction 读的正确性，其实就是记录了两个版本的 row，放到 Snapchat 这里的话，仅仅只有两个 version 的值是不够的，因为需要考虑到每个 transaction 对要读和要修改的 row 的影响，顺理成章地也就形成了 MVCC（multi-version concurrent control）这一 Solution。
@@ -63,13 +70,13 @@ Read Committed 和 Snapshot Isolation 两个 level 其实只是解决了 Read & 
 
 看以下的一个例子：
 
-![lost_udpate](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/lost_update.svg)
+![lost_udpate](/resources/isolation-level-of-database-transaction/lost_update.svg)
 
 其中 T1 和 T2 并发完成，可以看成转账操作，结果表明 T1 和 T2 完成之后，本来应该转入了一共 200，但是实际上只有 100，这种现象一般叫做 **Lost Update**（注意我们已经假设已经是处于 snapchat level）。
 
 除了 **Lost Update**，其实还有另外一种更普遍的情况（可以将 **Lost Update** 看成这种普遍情况的一种特例）：
 
-![write_skew](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/isolation-level-of-database-transaction/write_skew.svg)
+![write_skew](/resources/isolation-level-of-database-transaction/write_skew.svg)
 
 也许读者会觉得这里的这种情况和上一个例子没什么区别，但是笔者认为这里实际上是一个更普遍的例子：**Lost Update** 的根本原因是 Write 依赖于写之前的 Read，然而被依赖的 Read 可能会发生变化，从而导致依赖这个过时的 Read 值（称为 Phantom）的 Write 实际上是一次错误的 Write，也就是 **Write Skew**。
 

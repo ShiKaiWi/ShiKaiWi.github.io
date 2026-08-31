@@ -1,3 +1,10 @@
+---
+title: Stream Reading
+date: 2018-08-22
+tags:
+  - go
+layout: post.njk
+---
 # Stream Reading
 ### Abstract
 本文主要阐述一下两点内容：
@@ -179,4 +186,4 @@ zipFile.Close()
 读取文件 ——————> 去除敏感行 ————————> 压缩传输
 ```
 
-完整的 demo 代码可以看：[ShiKaiWi.github.io/stream_reading.go at master · ShiKaiWi/ShiKaiWi.github.io · GitHub](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/stream-reading/stream_reading.go)
+完整的 demo 代码可以看：[ShiKaiWi.github.io/stream_reading.go at master · ShiKaiWi/ShiKaiWi.github.io · GitHub](/resources/stream-reading/stream_reading.go)
