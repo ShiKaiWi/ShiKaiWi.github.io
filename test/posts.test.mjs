@@ -6,6 +6,7 @@ import {
   monthKey,
   monthLabel,
   groupByMonth,
+  frontmatterHasRequiredFields,
 } from "../src/lib/posts.js";
 
 test("missingFrontmatterFields reports title, date, and tags", () => {
@@ -38,4 +39,10 @@ test("groupByMonth keeps newest-first groups", () => {
   assert.equal(groups[0].label, "October 2018");
   assert.deepEqual(groups[0].posts.map((p) => p.data.title), ["Mutex", "Bloom"]);
   assert.equal(groups[1].key, "2018-09");
+});
+
+test("frontmatterHasRequiredFields reads the YAML fence", () => {
+  const raw = `---\ntitle: Hello\ndate: 2018-10-24\ntags:\n  - os\n---\nbody\n`;
+  assert.deepEqual(frontmatterHasRequiredFields(raw), []);
+  assert.deepEqual(frontmatterHasRequiredFields(`---\ntitle: Hello\n---\n`), ["date", "tags"]);
 });

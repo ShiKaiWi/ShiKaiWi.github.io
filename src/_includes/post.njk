@@ -1,0 +1,18 @@
+---
+layout: layout.njk
+---
+<article class="post">
+  <p class="back"><a href="/">← all posts</a></p>
+  <h1>{{ title }}</h1>
+  <p class="meta">
+    <time datetime="{{ page.date | isoDate }}">{{ page.date | isoDate }}</time>
+    {% for tag in tags %}
+      {% if tag != "posts" %}
+      <a class="tag" href="/?tag={{ tag }}">{{ tag }}</a>
+      {% endif %}
+    {% endfor %}
+  </p>
+  <div class="body">
+    {{ content | safe }}
+  </div>
+</article>

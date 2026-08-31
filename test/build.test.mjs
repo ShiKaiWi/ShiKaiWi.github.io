@@ -28,3 +28,14 @@ test("homepage footer lists the four friends", () => {
   assert.match(html, /ja1r0\.github\.io/);
   assert.match(html, /sadhen\.com/);
 });
+
+test("mutex article page renders title, date, tag, and body", () => {
+  const result = spawnSync("npx", ["eleventy"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  const html = readFileSync("_site/posts/mutex-impl/index.html", "utf8");
+  assert.match(html, /Mutex Implementation/);
+  assert.match(html, /2018-10-24/);
+  assert.match(html, /href="\/\?tag=os"/);
+  assert.match(html, /all posts/);
+  assert.match(html, /mutex/);
+});

@@ -15,3 +15,9 @@ body {
 .masthead h1 { font-weight: 500; letter-spacing: 0.01em; margin: 0; }
 .subtitle { color: #7a7264; margin: 0.35rem 0 0; }
 code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
+.back { font-size: 0.95rem; }
+.back a { color: #7a7264; text-decoration: none; border-bottom: 1px solid #d8d0c2; }
+.meta { color: #7a7264; font-size: 0.95rem; }
+.tag { color: #7a7264; text-decoration: none; border-bottom: 1px solid #c8c0b2; margin-left: 0.6rem; }
+.body pre { background: #efe8dc; padding: 0.9rem 1rem; overflow-x: auto; }
+.body img { max-width: 100%; height: auto; }

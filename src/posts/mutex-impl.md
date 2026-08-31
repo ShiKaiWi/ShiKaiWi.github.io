@@ -1,3 +1,10 @@
+---
+title: Mutex Implementation
+date: 2018-10-24
+tags:
+  - os
+layout: post.njk
+---
 # Mutex-Implement
 
 ## 背景
@@ -18,7 +25,7 @@ a = 12
 write-after-read 的原子性，是 lock-free 和 lock 的起点。
 
 ### 实现
-我用 rust 写了一份 `mutex` 的[实现](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/resources/mutex-impl/mmutex.rs)，如果有一些遗漏和错误，还望读者指出。
+我用 rust 写了一份 `mutex` 的[实现](/resources/mutex-impl/mmutex.rs)，如果有一些遗漏和错误，还望读者指出。
 
 首先看一下 `mutex` 的 定义：
 ```rust

@@ -1,3 +1,14 @@
+export function frontmatterHasRequiredFields(rawMarkdown) {
+  const match = rawMarkdown.match(/^---\n([\s\S]*?)\n---/);
+  const block = match ? match[1] : "";
+  const has = (key) => new RegExp(`^${key}:`, "m").test(block);
+  const missing = [];
+  if (!has("title")) missing.push("title");
+  if (!has("date")) missing.push("date");
+  if (!has("tags")) missing.push("tags");
+  return missing;
+}
+
 export function missingFrontmatterFields(data) {
   const missing = [];
   if (data.title == null || String(data.title).trim() === "") missing.push("title");
