@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} · {% endif %}{{ site.name }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="page">
+    {{ content | safe }}
+    {% if friends and friends.length %}
+    <footer class="friends">
+      <span>friends</span>
+      {% for friend in friends %}
+      <a href="{{ friend.url }}">{{ friend.name }}</a>
+      {% endfor %}
+    </footer>
+    {% endif %}
+  </div>
+</body>
+</html>

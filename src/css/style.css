@@ -1,0 +1,17 @@
+:root {
+  --paper: #f7f3eb;
+  --ink: #2a2418;
+  --muted: #7a7264;
+  --line: #d8d0c2;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #f7f3eb; color: #2a2418; }
+body {
+  font-family: Georgia, ui-serif, "Times New Roman", serif;
+  line-height: 1.6;
+}
+.page { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+.masthead h1 { font-weight: 500; letter-spacing: 0.01em; margin: 0; }
+.subtitle { color: #7a7264; margin: 0.35rem 0 0; }
+code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
