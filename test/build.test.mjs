@@ -18,3 +18,13 @@ test("homepage build prints the site name on paper", () => {
   assert.match(css, /#f7f3eb/);
   assert.equal(existsSync("_site/css/style.css"), true);
 });
+
+test("homepage footer lists the four friends", () => {
+  const result = build();
+  assert.equal(result.status, 0, result.stderr);
+  const html = readFileSync("_site/index.html", "utf8");
+  assert.match(html, /tao93\.top/);
+  assert.match(html, /zxshamson\.github\.io/);
+  assert.match(html, /ja1r0\.github\.io/);
+  assert.match(html, /sadhen\.com/);
+});
