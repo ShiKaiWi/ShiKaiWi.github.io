@@ -27,6 +27,9 @@ test("homepage footer lists the four friends", () => {
   assert.match(html, /zxshamson\.github\.io/);
   assert.match(html, /ja1r0\.github\.io/);
   assert.match(html, /sadhen\.com/);
+  const article = readFileSync("_site/posts/mutex-impl/index.html", "utf8");
+  assert.doesNotMatch(article, /tao93\.top/);
+  assert.doesNotMatch(article, /friends/);
 });
 
 test("mutex article page renders title, date, tag, and body", () => {
@@ -38,6 +41,12 @@ test("mutex article page renders title, date, tag, and body", () => {
   assert.match(html, /href="\/\?tag=os"/);
   assert.match(html, /all posts/);
   assert.match(html, /mutex/);
+  assert.match(html, /class="token keyword"/);
+  const css = readFileSync("_site/css/style.css", "utf8");
+  assert.match(css, /\.token\.comment/);
+  assert.match(css, /\.token\.keyword[\s\S]*?color:/);
+  assert.match(css, /\.token\.string/);
+  assert.match(css, /\.token\.function/);
 });
 
 const SLUGS = [

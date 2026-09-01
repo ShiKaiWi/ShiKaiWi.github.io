@@ -15,6 +15,33 @@ body {
 .masthead h1 { font-weight: 500; letter-spacing: 0.01em; margin: 0; }
 .subtitle { color: #7a7264; margin: 0.35rem 0 0; }
 code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata { color: #8a8274; }
+.token.punctuation { color: #7a7264; }
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol { color: #8b4a3a; }
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin { color: #5a6b3a; }
+.token.operator,
+.token.entity,
+.token.url { color: #6b5a3a; }
+.token.atrule,
+.token.attr-value,
+.token.keyword { color: #3d5a6b; }
+.token.function,
+.token.class-name { color: #8b4a52; }
+.token.regex,
+.token.important,
+.token.variable { color: #8b6b3a; }
 .back { font-size: 0.95rem; }
 .back a { color: #7a7264; text-decoration: none; border-bottom: 1px solid #d8d0c2; }
 .meta { color: #7a7264; font-size: 0.95rem; }

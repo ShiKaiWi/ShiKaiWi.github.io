@@ -9,14 +9,6 @@
 <body>
   <div class="page">
     {{ content | safe }}
-    {% if friends and friends.length %}
-    <footer class="friends">
-      <span>friends</span>
-      {% for friend in friends %}
-      <a href="{{ friend.url }}">{{ friend.name }}</a>
-      {% endfor %}
-    </footer>
-    {% endif %}
   </div>
 </body>
 </html>
