@@ -52,11 +52,13 @@ code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
 .tags a { color: #7a7264; text-decoration: none; }
 .tags a.is-active { color: #2a2418; border-bottom: 1px solid #2a2418; }
 .month h2 { font-size: 0.85rem; color: #9a9284; font-weight: 500; margin: 1.4rem 0 0.4rem; }
-.entry { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; }
+.entry { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0; }
 .entry[hidden], .month[hidden] { display: none; }
-.entry a { color: #2a2418; text-decoration: none; }
-.entry a:hover { border-bottom: 1px solid #2a2418; }
-.entry-tags { color: #9a9284; font-size: 0.85rem; }
+.entry > a { color: #2a2418; text-decoration: none; }
+.entry > a:hover { border-bottom: 1px solid #2a2418; }
+.entry-tags { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.55rem; flex-shrink: 0; }
+.entry-tags a { color: #9a9284; font-size: 0.85rem; text-decoration: none; }
+.entry-tags a:hover { color: #2a2418; border-bottom: 1px solid #2a2418; }
 #empty-tags { color: #7a7264; }
 .friends {
   margin-top: 3.2rem;

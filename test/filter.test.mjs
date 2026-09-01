@@ -23,6 +23,12 @@ test("articleVisible treats null as all", () => {
   assert.equal(articleVisible(["go"], "os"), false);
 });
 
+test("articleVisible matches any tag on a multi-tag post", () => {
+  assert.equal(articleVisible(["web", "network"], "web"), true);
+  assert.equal(articleVisible(["web", "network"], "network"), true);
+  assert.equal(articleVisible(["web", "network"], "go"), false);
+});
+
 function node(attrs) {
   return {
     hidden: false,
@@ -77,6 +83,25 @@ test("applyFilter keeps matching entries and drops the query on all", () => {
     replaceState: () => {},
   });
   assert.equal(go.hidden, false);
+  assert.equal(month.hidden, false);
+  assert.equal(empty.hidden, true);
+});
+
+test("applyFilter shows a multi-tag post for each of its tags", () => {
+  const https = node({ "data-tags": "web network" });
+  const go = node({ "data-tags": "go" });
+  const month = node({ entries: [https, go] });
+  const empty = node({});
+  applyFilter({
+    search: "?tag=network",
+    articles: [https, go],
+    months: [month],
+    empty,
+    tagLinks: [node({ "data-tag": "all" }), node({ "data-tag": "network" })],
+    replaceState: () => {},
+  });
+  assert.equal(https.hidden, false);
+  assert.equal(go.hidden, true);
   assert.equal(month.hidden, false);
   assert.equal(empty.hidden, true);
 });

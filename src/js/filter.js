@@ -54,9 +54,9 @@ export function boot(doc = document, loc = location, hist = history) {
       replaceState: (url) => hist.replaceState(null, "", url),
     });
   run(loc.search);
-  doc.querySelector(".tags")?.addEventListener("click", (event) => {
-    const link = event.target.closest("[data-tag]");
-    if (!link) return;
+  doc.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-tag]");
+    if (!link || !link.closest(".tags, .entry-tags")) return;
     event.preventDefault();
     const next = nextSelectedTag(link.getAttribute("data-tag"), selectedTag(loc.search));
     run(next ? `?tag=${next}` : "");

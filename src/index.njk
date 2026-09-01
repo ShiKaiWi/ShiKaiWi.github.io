@@ -25,7 +25,9 @@ permalink: /
       <a href="{{ post.url }}">{{ post.data.title }}</a>
       <span class="entry-tags">
         {% for tag in post.data.tags %}
-          {% if tag != "posts" %}{{ tag }} {% endif %}
+          {% if tag != "posts" %}
+          <a href="/?tag={{ tag }}" data-tag="{{ tag }}">{{ tag }}</a>
+          {% endif %}
         {% endfor %}
       </span>
     </article>

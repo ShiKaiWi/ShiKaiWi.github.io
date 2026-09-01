@@ -109,6 +109,21 @@ test("homepage lists posts by month and exposes tags", () => {
   assert.ok(oct < mutex && mutex < bloom && bloom < sep);
 });
 
+test("a post with two tags renders both on the article and homepage", () => {
+  const result = spawnSync("npx", ["eleventy"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  const article = readFileSync("_site/posts/go-to-https/index.html", "utf8");
+  assert.match(article, /href="\/\?tag=web"/);
+  assert.match(article, /href="\/\?tag=network"/);
+  const home = readFileSync("_site/index.html", "utf8");
+  const start = home.indexOf("Go To HTTPS");
+  assert.ok(start >= 0);
+  const slice = home.slice(Math.max(0, start - 280), start + 420);
+  assert.match(slice, /data-tags="web network\s*"/);
+  assert.match(slice, /href="\/\?tag=web"/);
+  assert.match(slice, /href="\/\?tag=network"/);
+});
+
 test("pages workflow deploys _site via GitHub Actions", () => {
   const yml = readFileSync(".github/workflows/pages.yml", "utf8");
   assert.match(yml, /actions\/upload-pages-artifact/);
