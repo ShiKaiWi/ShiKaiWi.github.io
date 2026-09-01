@@ -26,6 +26,7 @@ code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
 .tags a.is-active { color: #2a2418; border-bottom: 1px solid #2a2418; }
 .month h2 { font-size: 0.85rem; color: #9a9284; font-weight: 500; margin: 1.4rem 0 0.4rem; }
 .entry { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; }
+.entry[hidden], .month[hidden] { display: none; }
 .entry a { color: #2a2418; text-decoration: none; }
 .entry a:hover { border-bottom: 1px solid #2a2418; }
 .entry-tags { color: #9a9284; font-size: 0.85rem; }
