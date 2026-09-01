@@ -19,17 +19,24 @@ test("homepage build prints the site name on paper", () => {
   assert.equal(existsSync("_site/css/style.css"), true);
 });
 
-test("homepage footer lists the four friends", () => {
+test("homepage footer lists the remaining friend", () => {
   const result = build();
   assert.equal(result.status, 0, result.stderr);
   const html = readFileSync("_site/index.html", "utf8");
-  assert.match(html, /tao93\.top/);
+  assert.match(html, /class="friends"/);
+  assert.match(html, /class="friends-label"/);
   assert.match(html, /zxshamson\.github\.io/);
-  assert.match(html, /ja1r0\.github\.io/);
-  assert.match(html, /sadhen\.com/);
+  assert.doesNotMatch(html, /tao93\.top/);
+  assert.doesNotMatch(html, /ja1r0\.github\.io/);
+  assert.doesNotMatch(html, /sadhen\.com/);
+  const css = readFileSync("_site/css/style.css", "utf8");
+  assert.match(css, /\.friends \{/);
+  assert.match(css, /\.friends-label/);
+  assert.match(css, /\.friends a/);
   const article = readFileSync("_site/posts/mutex-impl/index.html", "utf8");
-  assert.doesNotMatch(article, /tao93\.top/);
-  assert.doesNotMatch(article, /friends/);
+  assert.doesNotMatch(article, /zxshamson\.github\.io/);
+  assert.doesNotMatch(article, /class="friends"/);
+  assert.doesNotMatch(article, /friends-label/);
 });
 
 test("mutex article page renders title, date, tag, and body", () => {

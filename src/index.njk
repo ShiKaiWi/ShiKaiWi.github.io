@@ -36,7 +36,7 @@ permalink: /
 
 {% if friends and friends.length %}
 <footer class="friends">
-  <span>friends</span>
+  <span class="friends-label">friends</span>
   {% for friend in friends %}
   <a href="{{ friend.url }}">{{ friend.name }}</a>
   {% endfor %}

@@ -58,3 +58,23 @@ code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
 .entry a:hover { border-bottom: 1px solid #2a2418; }
 .entry-tags { color: #9a9284; font-size: 0.85rem; }
 #empty-tags { color: #7a7264; }
+.friends {
+  margin-top: 3.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d8d0c2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.85rem;
+  font-size: 0.85rem;
+}
+.friends-label { color: #9a9284; }
+.friends a {
+  color: #7a7264;
+  text-decoration: none;
+  border-bottom: 1px solid #c8c0b2;
+}
+.friends a:hover {
+  color: #2a2418;
+  border-bottom-color: #2a2418;
+}
