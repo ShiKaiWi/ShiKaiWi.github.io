@@ -1,28 +1,10 @@
-## Web
-[ES5 Inheritance](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/ES5-Inheritance.md)
+# Wei Xikai
 
-[Golang JSON Encoding](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Golang-JSON-Encoding.md)
+Notes on systems and code: https://shikaiwi.github.io
 
-[Stream Reading](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Stream-Reading.md)
+This repository is built with [Eleventy](https://www.11ty.dev/). After the first deploy, set **Settings → Pages → Source** to **GitHub Actions**.
 
-[Go To HTTPS](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Go-To-HTTPS.md)
-
-[TCP Time Wait State](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/TCP-Time-Wait-State.md)
-
-
-## SourceRead
-[Golang Syncmap](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Golang-SyncMap.md)
-
-## DataBase
-[Weak Isolation Level Of Database Transaction](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Weak-Isolation-Level-Of-Database-Transaction.md)
-
-[Bloom Filter](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Bloom-Filter.md)
-
-## OS
-[Mutex Implementation](https://github.com/ShiKaiWi/ShiKaiWi.github.io/blob/master/Mutex-Impl.md)
-
-## My Friends
-[tao](http://tao93.top)
-[hamson](https://zxshamson.github.io)
-[ja1r0](https://ja1r0.github.io/)
-[sadhen](http://sadhen.com/)
+```sh
+npm install
+npm start
+```

@@ -7,6 +7,9 @@
     "build": "eleventy",
     "test": "node --test test/*.test.mjs"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2"

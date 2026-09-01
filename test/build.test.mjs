@@ -92,3 +92,12 @@ test("homepage lists posts by month and exposes tags", () => {
   const sep = html.indexOf("September 2018");
   assert.ok(oct < mutex && mutex < bloom && bloom < sep);
 });
+
+test("pages workflow deploys _site via GitHub Actions", () => {
+  const yml = readFileSync(".github/workflows/pages.yml", "utf8");
+  assert.match(yml, /actions\/upload-pages-artifact/);
+  assert.match(yml, /actions\/deploy-pages/);
+  assert.match(yml, /npm test/);
+  assert.match(yml, /npm run build/);
+  assert.match(yml, /pages: write/);
+});
